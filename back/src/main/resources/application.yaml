@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/weini-shopping
+    username: root
+    password: admin123
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**Mapper.xml
+  global-config:
+    db-config:
+      logic-delete-field: delFlag
+      logic-delete-value: 1
+  configuration:
+    map-underscore-to-camel-case: true
+server:
+  port: 8090
