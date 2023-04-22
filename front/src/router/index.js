@@ -3,7 +3,14 @@ import {filterRoutes} from "./authoruzation";
 import asyncRoutes from "./routes";
 
 const routes=[
-
+    {
+        path:"/login",
+        name:"Login",
+        meta:{
+            permission:["user"]
+        },
+        component:()=>import("@/view/Login.vue")
+    }
 ]
 
 const router=createRouter({

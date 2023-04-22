@@ -1,3 +1,9 @@
 import http from "./request/request";
 
-export const loginByEmail = (data)=>http.post("/user/login/email",data)
+export const loginByEmailApi = (data)=>http.post("/user/login?type=email",data)
+
+export const getEmailCodeApi = (data)=>http.request({
+    url:"/user/email/code",
+    method:"get",
+    params:(data)
+})

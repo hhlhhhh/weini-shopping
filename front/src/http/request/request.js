@@ -1,9 +1,19 @@
 import axios from "axios";
 
+
+// axios.defaults.withCredentials = false;
+// // axios.defaults.headers.common['token'] =  AUTH_TOKEN
+// axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
+// axios.defaults.headers.put['Content-Type'] = 'application/json;charset=UTF-8';
+// // 前端设置允许跨域
+// axios.defaults.headers.post["Access-Control-Allow-Origin-Type"] = "*";
+
+axios.defaults.headers.put['Authorization'] = "";
+
 const http = axios.create({
     baseURL:process.env.BASE_URL,
-    withCredentials: true, // 跨域请求时是否需要使用凭证
-    timeout: 10000, // 请求超时时间
+    withCredentials: false, // 跨域请求时是否需要使用凭证
+    timeout: 70000, // 请求超时时间
 })
 
 
@@ -16,16 +26,16 @@ function errorHandle(response) {
         case 404:
             return Promise.reject("无法访问此页面！")
         default:
-            throw new Error(response.msg);
+            return Promise.reject(response.msg);
     }
 }
 // 成功处理函数
 function successHandle(response) {
     switch (response.status) {
         case 200:
-            return response.data;
+            return Promise.resolve(response);
         default:
-            return;
+            return response;
     }
 }
 
@@ -44,10 +54,12 @@ http.interceptors.request.use(
 
 http.interceptors.response.use(
     (response) => {
-        successHandle(response);
+        return successHandle(response);
     },
     (err) => {
-        errorHandle(err);
+        errorHandle(err).then(r => {
+            console.log(r)
+        });
     }
 );
 
