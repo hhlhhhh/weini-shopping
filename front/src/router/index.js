@@ -10,6 +10,14 @@ const routes=[
             permission:["user"]
         },
         component:()=>import("@/view/Login.vue")
+    },
+    {
+        path:"/home",
+        name:"Home",
+        meta:{
+            permission:["user"]
+        },
+        component:()=>import("@/view/Home.vue")
     }
 ]
 
