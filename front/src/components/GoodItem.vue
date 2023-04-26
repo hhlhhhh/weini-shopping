@@ -16,7 +16,6 @@
 </template>
 
 <script setup>
-import {defineProps} from 'vue'
 let {goodItem} = defineProps(['goodItem'])
 
 function init(){
@@ -55,6 +54,7 @@ init()
     display: inline-flex;
     flex-direction: column;
     justify-content: space-between;
+    letter-spacing: 1px;
     flex-wrap: wrap;
     font-size: 15px;
     color: #333;

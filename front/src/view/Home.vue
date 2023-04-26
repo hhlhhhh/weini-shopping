@@ -1,9 +1,8 @@
 <template>
   <div class="content">
     <a-layout style="height: 400px;">
-      <a-layout-header>
+      <a-layout-header style="height: 70px">
         <Header/>
-        <a-divider :margin="5"/>
       </a-layout-header>
       <a-layout-content>
        <a-row>
@@ -192,7 +191,9 @@
           <a-col :span="2"></a-col>
         </a-row>
       </a-layout-content>
-      <a-layout-footer>Footer</a-layout-footer>
+      <a-layout-footer>
+        <Footer></Footer>
+      </a-layout-footer>
     </a-layout>
   </div>
 </template>
@@ -203,6 +204,7 @@ import { IconDesktop } from '@arco-design/web-vue/es/icon';
 import {IconUser} from "@arco-design/web-vue/es/icon";
 import GoodItem from "@/components/GoodItem.vue";
 import {reactive} from "vue";
+import Footer from "@/components/Footer.vue";
 
 const images = [
   'https://gw.alicdn.com/imgextra/i4/O1CN01a71ilU1T2RCTvUXDY_!!6000000002324-0-tps-846-472.jpg',
