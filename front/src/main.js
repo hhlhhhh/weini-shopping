@@ -9,6 +9,7 @@ import "primevue/resources/primevue.min.css";//core
 import "primeicons/primeicons.css";//icons
 
 import Button from "primevue/button";
+import InputNumber from "primevue/inputnumber";
 import ToastService from "primevue/toastservice";
 
 const app = createApp(App)
@@ -23,6 +24,7 @@ app.use(ToastService)
  * primeVue start
  */
 app.component("Button",Button)
+app.component("InputNumber",InputNumber)
 /**
  * primeVue end
  */

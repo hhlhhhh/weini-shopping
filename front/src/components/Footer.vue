@@ -5,7 +5,7 @@
         <img src="@/assets/images/footer/qq.jpg">
         <img src="@/assets/images/footer/weixin.jpg">
       </div>
-      <a-divider :margin="5" direction="vertical"></a-divider>
+      <a-divider :margin="30" direction="vertical"></a-divider>
       <div class="contact-number">
         <h3>联系我们</h3>
         <span>客服举报电话： 15228632335</span>
@@ -37,6 +37,7 @@
   flex-wrap: wrap;
   flex-direction: column;
   align-items: center;
+  margin-top: 50px;
   .contact{
     display: flex;
     .twoDimensionalCode{
@@ -46,7 +47,7 @@
       img{
         width: 160px;
         &:last-child{
-          margin-left: 10px;
+          margin-left: 15px;
         }
       }
     }

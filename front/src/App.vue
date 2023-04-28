@@ -12,7 +12,7 @@ import Toast from 'primevue/toast';
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-  -webkit-font-smoothing: antialiased
+  -webkit-font-smoothing: antialiased;
 }
 li{
   list-style: none;

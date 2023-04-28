@@ -1,6 +1,4 @@
 import {createRouter,createWebHistory} from 'vue-router'
-import {filterRoutes} from "./authoruzation";
-import asyncRoutes from "./routes";
 
 const routes=[
     {
@@ -18,6 +16,14 @@ const routes=[
             permission:["user"]
         },
         component:()=>import("@/view/Home.vue")
+    },
+    {
+        path:"/shopping_cart",
+        name:"ShoppingCart",
+        meta:{
+            permission:["user"]
+        },
+        component:()=>import("@/view/ShoppingCart.vue")
     }
 ]
 
