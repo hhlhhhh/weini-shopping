@@ -15,7 +15,7 @@
       <div>分类</div>
       <div>购物车</div>
       <div>
-        <a-input-search :style="{width:'25vw'}" placeholder="请输入关键字"/>
+        <a-input-search :style="{width:'300px'}" placeholder="请输入关键字"/>
       </div>
       <div>
         <a-button type="text" style="color: rgb(99, 126, 171);font-size: 16px">登录 / 注册</a-button>
@@ -34,9 +34,11 @@
 .content-header{
   position: fixed;
   width: 100%;
+  min-width: 1200px;
   height: 70px;
   background-color: rgb(181, 186, 206);
   z-index: 99;
+  overflow: visible;
   .header{
     display: inline-flex;
     justify-items: center;

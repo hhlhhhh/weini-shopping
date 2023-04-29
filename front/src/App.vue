@@ -26,6 +26,7 @@ em{
   font-style: normal;
 }
 .content{
+  display: block;
   min-width: 1200px;
 }
 h1{

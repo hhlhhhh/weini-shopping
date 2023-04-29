@@ -1,7 +1,7 @@
 <template>
-  <div class="content">
-    <a-layout style="height: 400px;">
-      <a-layout-header style="height: 70px">
+  <div class="home-content">
+    <a-layout>
+      <a-layout-header style="padding-bottom: 70px">
         <Header/>
       </a-layout-header>
       <a-layout-content>
@@ -242,11 +242,10 @@ const goods = reactive([
 </script>
 
 <style scoped lang="less">
-.content{
-  width: 100vw;
-  height: 100vh;
-  overflow-x: hidden;
-  overflow-y: scroll;
+.home-content{
+  width: 100%;
+  //overflow-x: hidden;
+  //overflow-y: scroll;
   background: linear-gradient(200deg, #f3e7e9, #325a96);
   .classify{
     width: 100%;

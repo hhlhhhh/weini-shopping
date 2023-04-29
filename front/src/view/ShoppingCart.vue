@@ -1,6 +1,6 @@
 <template>
-  <div class="content">
-    <a-layout style="height: 400px;">
+  <div class="shopping-cart-content">
+    <a-layout>
       <a-layout-header style="height: 80px">
         <div class="top-bar">
           <div>
@@ -11,7 +11,7 @@
             />
           </div>
           <div>
-            <a-input-search :style="{width:'16vw',height:'36px',borderRadius:'8px'}" placeholder="请输入宝贝信息"/>
+            <a-input-search :style="{width:'250px',height:'36px',borderRadius:'8px'}" placeholder="请输入宝贝信息"/>
           </div>
         </div>
       </a-layout-header>
@@ -56,6 +56,234 @@
               </div>
               <div>
                 操作
+              </div>
+            </div>
+            <div class="shopping-cart-item">
+              <div class="item-header">
+                <div class="item-checkbox">
+                  <input type="checkbox">
+                </div>
+                <div class="item-shop">
+                  店铺：
+                  <span>
+                  唐晓文艺店
+                </span>
+                </div>
+              </div>
+              <div class="item-box">
+                <ul>
+                  <li>
+                    <input type="checkbox">
+                  </li>
+                  <li>
+                    <img class="item-image" src="https://img11.360buyimg.com/jdcms/s300x300_jfs/t1/1831/1/19778/132503/63842db6E811848c4/83b8de2b8679eddc.jpg.avif">
+                  </li>
+                  <li>
+                    儿童鞋子儿童鞋子儿童鞋子儿童鞋子儿童鞋子儿童鞋子儿童鞋子儿童鞋子儿童鞋子
+                  </li>
+                  <li>
+                    <ul class="goods-item-category">
+                      <li>
+                        <span>尺寸：</span>
+                        <span>2*2*2cm</span>
+                      </li>
+                      <li>
+                        <span>颜色分类：</span>
+                        <span>黑色黑色黑色黑色黑色黑色黑色黑色黑色</span>
+                      </li>
+                      <li>
+                        <span>几人座：</span>
+                        <span>单人</span>
+                      </li>
+                    </ul>
+                  </li>
+                  <li>
+                    <span class="original-price">￥123.00</span>
+                    <span class="seckill-price">￥99.00</span>
+                  </li>
+                  <li>
+                    <a-input-number :model-value="testNumberInput" :style="{width:'80px'}" :min="0" :max="100" mode="button" size="mini" class="item-count" />
+                  </li>
+                  <li>
+                    <span>￥</span>
+                    <span>155.30</span>
+                  </li>
+                  <li>
+                    <a>移入收藏夹</a>
+                    <a>删除</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="shopping-cart-item">
+              <div class="item-header">
+                <div class="item-checkbox">
+                  <input type="checkbox">
+                </div>
+                <div class="item-shop">
+                  店铺：
+                  <span>
+                  唐晓文艺店
+                </span>
+                </div>
+              </div>
+              <div class="item-box">
+                <ul>
+                  <li>
+                    <input type="checkbox">
+                  </li>
+                  <li>
+                    <img class="item-image" src="https://img11.360buyimg.com/jdcms/s300x300_jfs/t1/1831/1/19778/132503/63842db6E811848c4/83b8de2b8679eddc.jpg.avif">
+                  </li>
+                  <li>
+                    儿童鞋子儿童鞋子儿童鞋子儿童鞋子儿童鞋子儿童鞋子儿童鞋子儿童鞋子儿童鞋子
+                  </li>
+                  <li>
+                    <ul class="goods-item-category">
+                      <li>
+                        <span>尺寸：</span>
+                        <span>2*2*2cm</span>
+                      </li>
+                      <li>
+                        <span>颜色分类：</span>
+                        <span>黑色黑色黑色黑色黑色黑色黑色黑色黑色</span>
+                      </li>
+                      <li>
+                        <span>几人座：</span>
+                        <span>单人</span>
+                      </li>
+                    </ul>
+                  </li>
+                  <li>
+                    <span class="original-price">￥123.00</span>
+                    <span class="seckill-price">￥99.00</span>
+                  </li>
+                  <li>
+                    <a-input-number :model-value="testNumberInput" :style="{width:'80px'}" :min="0" :max="100" mode="button" size="mini" class="item-count" />
+                  </li>
+                  <li>
+                    <span>￥</span>
+                    <span>155.30</span>
+                  </li>
+                  <li>
+                    <a>移入收藏夹</a>
+                    <a>删除</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="shopping-cart-item">
+              <div class="item-header">
+                <div class="item-checkbox">
+                  <input type="checkbox">
+                </div>
+                <div class="item-shop">
+                  店铺：
+                  <span>
+                  唐晓文艺店
+                </span>
+                </div>
+              </div>
+              <div class="item-box">
+                <ul>
+                  <li>
+                    <input type="checkbox">
+                  </li>
+                  <li>
+                    <img class="item-image" src="https://img11.360buyimg.com/jdcms/s300x300_jfs/t1/1831/1/19778/132503/63842db6E811848c4/83b8de2b8679eddc.jpg.avif">
+                  </li>
+                  <li>
+                    儿童鞋子儿童鞋子儿童鞋子儿童鞋子儿童鞋子儿童鞋子儿童鞋子儿童鞋子儿童鞋子
+                  </li>
+                  <li>
+                    <ul class="goods-item-category">
+                      <li>
+                        <span>尺寸：</span>
+                        <span>2*2*2cm</span>
+                      </li>
+                      <li>
+                        <span>颜色分类：</span>
+                        <span>黑色黑色黑色黑色黑色黑色黑色黑色黑色</span>
+                      </li>
+                      <li>
+                        <span>几人座：</span>
+                        <span>单人</span>
+                      </li>
+                    </ul>
+                  </li>
+                  <li>
+                    <span class="original-price">￥123.00</span>
+                    <span class="seckill-price">￥99.00</span>
+                  </li>
+                  <li>
+                    <a-input-number :model-value="testNumberInput" :style="{width:'80px'}" :min="0" :max="100" mode="button" size="mini" class="item-count" />
+                  </li>
+                  <li>
+                    <span>￥</span>
+                    <span>155.30</span>
+                  </li>
+                  <li>
+                    <a>移入收藏夹</a>
+                    <a>删除</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="shopping-cart-item">
+              <div class="item-header">
+                <div class="item-checkbox">
+                  <input type="checkbox">
+                </div>
+                <div class="item-shop">
+                  店铺：
+                  <span>
+                  唐晓文艺店
+                </span>
+                </div>
+              </div>
+              <div class="item-box">
+                <ul>
+                  <li>
+                    <input type="checkbox">
+                  </li>
+                  <li>
+                    <img class="item-image" src="https://img11.360buyimg.com/jdcms/s300x300_jfs/t1/1831/1/19778/132503/63842db6E811848c4/83b8de2b8679eddc.jpg.avif">
+                  </li>
+                  <li>
+                    儿童鞋子儿童鞋子儿童鞋子儿童鞋子儿童鞋子儿童鞋子儿童鞋子儿童鞋子儿童鞋子
+                  </li>
+                  <li>
+                    <ul class="goods-item-category">
+                      <li>
+                        <span>尺寸：</span>
+                        <span>2*2*2cm</span>
+                      </li>
+                      <li>
+                        <span>颜色分类：</span>
+                        <span>黑色黑色黑色黑色黑色黑色黑色黑色黑色</span>
+                      </li>
+                      <li>
+                        <span>几人座：</span>
+                        <span>单人</span>
+                      </li>
+                    </ul>
+                  </li>
+                  <li>
+                    <span class="original-price">￥123.00</span>
+                    <span class="seckill-price">￥99.00</span>
+                  </li>
+                  <li>
+                    <a-input-number :model-value="testNumberInput" :style="{width:'80px'}" :min="0" :max="100" mode="button" size="mini" class="item-count" />
+                  </li>
+                  <li>
+                    <span>￥</span>
+                    <span>155.30</span>
+                  </li>
+                  <li>
+                    <a>移入收藏夹</a>
+                    <a>删除</a>
+                  </li>
+                </ul>
               </div>
             </div>
             <div class="shopping-cart-item">
@@ -168,11 +396,10 @@ let testNumberInput = ref(0)
 </script>
 
 <style scoped lang="less">
-.content{
-  width: 100vw;
-  height: 100vh;
+.shopping-cart-content{
+  width: 100%;
   overflow-x: hidden;
-  overflow-y: scroll;
+  //overflow-y: hidden;
   background: linear-gradient(200deg, #f3e7e9, #325a96);
 
   .top-bar{
@@ -180,9 +407,10 @@ let testNumberInput = ref(0)
     display: flex;
     height: 80px;
     width: 100%;
+    min-width: 1200px;
     align-items: center;
     justify-content: space-around;
-    padding: 0 20%;
+    padding: 0 150px;
     background-color: rgb(179, 184, 205);
     z-index: 99;
   }
@@ -192,6 +420,7 @@ let testNumberInput = ref(0)
     background-color: rgb(250, 246, 246);
     border-radius: 26px;
     padding-bottom: 10px;
+    //overflow-x: hidden;
     margin: 20px auto;
     .arco-divider-horizontal{
       border-color: gray;
