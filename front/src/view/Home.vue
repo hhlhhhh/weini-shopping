@@ -244,9 +244,9 @@ const goods = reactive([
 <style scoped lang="less">
 .home-content{
   width: 100%;
-  //overflow-x: hidden;
+  overflow-x: hidden;
   //overflow-y: scroll;
-  background: linear-gradient(200deg, #f3e7e9, #325a96);
+  //background: linear-gradient(200deg, #f3e7e9, #325a96);
   .classify{
     width: 100%;
     max-width: 300px;
@@ -379,7 +379,7 @@ const goods = reactive([
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
-    margin: 20px 10px 20px 0px;
+    margin: 20px 10px 20px 0;
   }
 }
 .arco-layout-content{

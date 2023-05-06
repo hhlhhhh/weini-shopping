@@ -1,8 +1,9 @@
 <template>
-  <div class="content">
+  <div class="app-content">
     <Toast></Toast>
     <router-view></router-view>
   </div>
+  <div class="bgc"></div>
 </template>
 <script setup>
 import Toast from 'primevue/toast';
@@ -25,9 +26,22 @@ a{
 em{
   font-style: normal;
 }
-.content{
+i{
+  font-style: normal;
+}
+.app-content{
   display: block;
   min-width: 1200px;
+}
+.bgc{
+  display: block;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width:100%;
+  height:100vh;
+  background: linear-gradient(200deg, #f3e7e9, #325a96);
+  z-index: -1;
 }
 h1{
   margin-block-start: 1em;
@@ -36,6 +50,7 @@ h1{
   margin-inline-end: 0px;
   font-weight: bold;
 }
+
 .p-toast {
   font-size: 16px;
   width: 300px;

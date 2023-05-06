@@ -314,7 +314,7 @@ input{
         flex-direction: column;
 
         li {
-          margin: 8px 0;
+          margin: 5px 0;
         }
       }
     }

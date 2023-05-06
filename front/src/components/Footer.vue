@@ -42,10 +42,10 @@
     display: flex;
     .twoDimensionalCode{
       display: inline-block;
-      height: 200px;
-      padding: 30px 20px 20px;
+      height: 150px;
+      padding: 60px 20px 0px;
       img{
-        width: 160px;
+        width: 130px;
         &:last-child{
           margin-left: 15px;
         }
@@ -57,9 +57,9 @@
       justify-content: flex-start;
       align-items: flex-start;
       margin-left: 20px;
-      margin-top: 25px;
+      margin-top: 20px;
       h3{
-        font-size: 24px;
+        font-size: 20px;
         color: #4C4D4D;
         margin-bottom: 5px
       }
@@ -75,7 +75,7 @@
   }
   .endnote{
     text-align: center;
-    margin: 30px 0 100px;
+    margin: 20px 0 100px;
     p{
       height: 20px;
       line-height: 20px;

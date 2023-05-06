@@ -2,6 +2,13 @@ import {createRouter,createWebHistory} from 'vue-router'
 
 const routes=[
     {
+        path:"/",
+        name:"root",
+        redirect:{
+            name:"Home"
+        }
+    },
+    {
         path:"/login",
         name:"Login",
         meta:{
@@ -24,6 +31,32 @@ const routes=[
             permission:["user"]
         },
         component:()=>import("@/view/ShoppingCart.vue")
+    },
+    {
+        path:"/profile",
+        name:"Profile",
+        meta:{
+            permission:["user"]
+        },
+        redirect: "/profile/detail",
+        component:()=>import("@/view/Profile.vue"),
+        children:[
+            {
+                path: "detail",
+                name: "Detail",
+                component:()=>import("@/view/profile/SelfProfile.vue")
+            },
+            {
+                path: "shopping-cart",
+                name: "ProfileShoppingCart",
+                component:()=>import("@/view/profile/ShoppingCart.vue")
+            },
+            {
+                path: "buy",
+                name: "Buy",
+                component:()=>import("@/view/profile/Buy.vue")
+            }
+        ]
     }
 ]
 
