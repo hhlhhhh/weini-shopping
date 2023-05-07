@@ -5,12 +5,12 @@
         <template #title>
           所有订单
         </template>
-        <div class="all-item">
+        <div class="item">
           <div class="all-item-search">
             <a-input-search :style="{width:'360px'}" placeholder="输入商品名或订单号进行搜索" search-button/>
           </div>
           <div>
-            <div class="all-item-list-header">
+            <div class="item-list-header">
               <ul>
                 <li>商品</li>
                 <li>单价</li>
@@ -19,9 +19,13 @@
                 <li>操作</li>
               </ul>
             </div>
-            <div class="all-item-list">
-              <PurchasedItem></PurchasedItem>
-              <PurchasedItem></PurchasedItem>
+            <div class="item-list">
+              <PurchasedItem>
+                <template #operate>
+                  <a-button type="primary">评价</a-button>
+                  <a-button type="primary">再来一单</a-button>
+                </template>
+              </PurchasedItem>
             </div>
           </div>
         </div>
@@ -30,39 +34,129 @@
         <template #title>
           待付款
         </template>
-        Content of Tab Panel 2
+        <div class="item">
+          <div>
+            <div class="item-list-header">
+              <ul>
+                <li>商品</li>
+                <li>单价</li>
+                <li>数量</li>
+                <li>金额</li>
+                <li>操作</li>
+              </ul>
+            </div>
+            <div class="item-list">
+              <PurchasedItem>
+                <template #operate>
+                  <a-button type="primary">去付款</a-button>
+                </template>
+              </PurchasedItem>
+            </div>
+          </div>
+        </div>
       </a-tab-pane>
       <a-tab-pane key="3">
         <template #title>
           待发货
         </template>
-        Content of Tab Panel 3
+        <div class="item">
+          <div>
+            <div class="item-list-header">
+              <ul>
+                <li>商品</li>
+                <li>单价</li>
+                <li>数量</li>
+                <li>金额</li>
+                <li>操作</li>
+              </ul>
+            </div>
+            <div class="item-list">
+              <PurchasedItem>
+                <template #operate>
+                  <a-button type="primary">申请退款</a-button>
+                </template>
+              </PurchasedItem>
+            </div>
+          </div>
+        </div>
       </a-tab-pane>
       <a-tab-pane key="4">
         <template #title>
-          待收货
+          运输中
         </template>
-        Content of Tab Panel 3
+        <div class="item">
+          <div>
+            <div class="item-list-header">
+              <ul>
+                <li>商品</li>
+                <li>单价</li>
+                <li>数量</li>
+                <li>金额</li>
+                <li>操作</li>
+              </ul>
+            </div>
+            <div class="item-list">
+              <PurchasedItem>
+<!--                <template #operate>-->
+<!--                  <a-button type="primary">去付款</a-button>-->
+<!--                </template>-->
+              </PurchasedItem>
+            </div>
+          </div>
+        </div>
       </a-tab-pane>
       <a-tab-pane key="5">
         <template #title>
-          待评价
+          待收货
         </template>
-        Content of Tab Panel 3
+        <div class="item">
+          <div>
+            <div class="item-list-header">
+              <ul>
+                <li>商品</li>
+                <li>单价</li>
+                <li>数量</li>
+                <li>金额</li>
+                <li>操作</li>
+              </ul>
+            </div>
+            <div class="item-list">
+              <PurchasedItem>
+                <template #operate>
+                  <a-button type="primary">确认收货</a-button>
+                </template>
+              </PurchasedItem>
+            </div>
+          </div>
+        </div>
       </a-tab-pane>
       <a-tab-pane key="6">
         <template #title>
           待评价
         </template>
-        Content of Tab Panel 3
+        <div class="item">
+          <div>
+            <div class="item-list-header">
+              <ul>
+                <li>商品</li>
+                <li>单价</li>
+                <li>数量</li>
+                <li>金额</li>
+                <li>操作</li>
+              </ul>
+            </div>
+            <div class="item-list">
+              <PurchasedItem>
+                <template #operate>
+                  <a-button type="primary">去评价</a-button>
+                  <a-button type="primary">再来一单</a-button>
+                </template>
+              </PurchasedItem>
+            </div>
+          </div>
+        </div>
       </a-tab-pane>
     </a-tabs>
-    <div class="header">
-
-    </div>
-    <div class="content">
-
-    </div>
   </div>
 </template>
 
@@ -79,15 +173,15 @@ import PurchasedItem from "@/view/profile/componets/PurchasedItem.vue";
   :deep(.arco-tabs-nav-ink){
     background-color: #c76538;
   }
-  .all-item{
+  .item{
     display: inline-block;
     width:1000px;
     //margin-top: 10px;
-    .all-item-search{
+    .item-search{
       margin-bottom: 20px;
     }
-    .all-item-list-header{
-      margin-bottom: 10px;
+    .item-list-header{
+      margin: 10px 0;
       >ul{
         display: flex;
         background-color: #d7d7e3;
@@ -102,8 +196,14 @@ import PurchasedItem from "@/view/profile/componets/PurchasedItem.vue";
         }
       }
     }
-    .all-item-list{
+    .item-list{
       margin-top: 20px;
+      .arco-btn-primary{
+        font-size: 14px;
+        color: #333333;
+        background-color: #f7f9fa;
+        margin-top: 10px;
+      }
     }
   }
 }

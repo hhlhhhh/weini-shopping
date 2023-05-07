@@ -68,8 +68,9 @@
         </li>
         <li>
           <div class="operate">
-            <a-button type="primary">评价</a-button>
-            <a-button type="primary">再来一单</a-button>
+            <slot name="operate">
+
+            </slot>
           </div>
         </li>
       </ul>
@@ -173,14 +174,7 @@ import {IconDelete} from "@arco-design/web-vue/es/icon";
         color: #333333;
         font-family: 'Hiragino Sans GB',tahoma, arial, '\5b8b\4f53', sans-serif;
       }
-      .operate{
-        .arco-btn-primary{
-          font-size: 14px;
-          color: #333333;
-          background-color: #f7f9fa;
-          margin-top: 10px;
-        }
-      }
+
     }
   }
 }
