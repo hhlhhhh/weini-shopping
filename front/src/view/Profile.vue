@@ -11,12 +11,12 @@
         <a-layout class="content">
             <a-layout-sider class="sider">
               <ul class="function">
-                <li><router-link to="./detail">我的信息</router-link></li>
-                <li><router-link to="./shopping-cart">购物车</router-link></li>
-                <li><router-link to="./buy">我的购买</router-link></li>
-                <li><router-link to="./collect">我的收藏</router-link></li>
-                <li><router-link to="./footprint">我的足迹</router-link></li>
-                <li><router-link to="./address">我的地址</router-link></li>
+                <li><router-link @click="clickedKey=0" :class="{'clicked':clickedKey===0}" to="./detail">我的信息</router-link></li>
+                <li><router-link @click="clickedKey=1" :class="{'clicked':clickedKey===1}" to="./shopping-cart">购物车</router-link></li>
+                <li><router-link @click="clickedKey=2" :class="{'clicked':clickedKey===2}" to="./buy">我的购买</router-link></li>
+                <li><router-link @click="clickedKey=3" :class="{'clicked':clickedKey===3}" to="./collect">我的收藏</router-link></li>
+                <li><router-link @click="clickedKey=4" :class="{'clicked':clickedKey===4}" to="./footprint">我的足迹</router-link></li>
+                <li><router-link @click="clickedKey=5" :class="{'clicked':clickedKey===5}" to="./address">我的地址</router-link></li>
               </ul>
             </a-layout-sider>
             <a-layout-content>
@@ -33,6 +33,8 @@
 <script setup>
 import Footer from "@/components/Footer.vue";
 import {ref} from "vue";
+
+const clickedKey = ref(0)   //控制sider高亮
 
 
 </script>
@@ -77,6 +79,9 @@ import {ref} from "vue";
           margin-top: 15px;
           a{
             color: #333333;
+          }
+          .clicked{
+            color: #FF5000;
           }
         }
       }

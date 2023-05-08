@@ -55,6 +55,11 @@ const routes=[
                 path: "buy",
                 name: "Buy",
                 component:()=>import("@/view/profile/Buy.vue")
+            },
+            {
+                path: "collect",
+                name: "Collect",
+                component:()=>import("@/view/profile/Collect.vue")
             }
         ]
     }
