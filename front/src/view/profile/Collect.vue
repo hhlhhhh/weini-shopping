@@ -1,7 +1,7 @@
 <template>
   <div class="collect">
     <div class="header">
-      <a-input-search :style="{width:'360px'}" placeholder="输入商品名或订单号进行搜索" search-button/>
+      <a-input-search :style="{width:'360px'}" placeholder="输入商品名或商品描述进行搜索" search-button/>
     </div>
     <div class="content">
       <template v-for="item in goods" key="item.id">

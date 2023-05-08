@@ -62,6 +62,11 @@ const routes=[
                 component:()=>import("@/view/profile/Collect.vue")
             },
             {
+                path: "footprint",
+                name: "Footprint",
+                component:()=>import("@/view/profile/Footprint.vue")
+            },
+            {
                 path: "address",
                 name: "Address",
                 component:()=>import("@/view/profile/Address.vue")
