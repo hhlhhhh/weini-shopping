@@ -13,6 +13,7 @@ import "primeicons/primeicons.css";//icons
 import Button from "primevue/button";
 import InputNumber from "primevue/inputnumber";
 import ToastService from "primevue/toastservice";
+import Checkbox from "primevue/checkbox"
 
 const app = createApp(App)
 
@@ -29,6 +30,7 @@ app.use(ToastService)
  */
 app.component("Button",Button)
 app.component("InputNumber",InputNumber)
+app.component("Checkbox",Checkbox)
 /**
  * primeVue end
  */

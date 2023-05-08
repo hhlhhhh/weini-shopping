@@ -60,6 +60,11 @@ const routes=[
                 path: "collect",
                 name: "Collect",
                 component:()=>import("@/view/profile/Collect.vue")
+            },
+            {
+                path: "address",
+                name: "Address",
+                component:()=>import("@/view/profile/Address.vue")
             }
         ]
     }

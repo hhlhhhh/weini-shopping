@@ -33,7 +33,7 @@
 <script setup>
 import Footer from "@/components/Footer.vue";
 import {ref} from "vue";
-
+//https://www.mxnzp.com/api/address/list?app_id=udjeaop9hnigut2h&app_secret=NWk0b2ZkQkdWczJydFA0MTlJcnJ3dz09
 const clickedKey = ref(0)   //控制sider高亮
 
 
@@ -62,7 +62,7 @@ const clickedKey = ref(0)   //控制sider高亮
     }
   }
   .content{
-    width:1200px;
+    width: 1200px;
     color: #000;
     margin: 20px auto 0;
     .sider{
