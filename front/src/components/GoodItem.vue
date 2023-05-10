@@ -59,6 +59,13 @@ init()
     font-size: 15px;
     color: #333;
     margin-left: 8px;
+    >div:first-child{
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+    }
     :hover{
       color: #FF5000;
     }

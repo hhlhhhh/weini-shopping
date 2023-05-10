@@ -72,6 +72,14 @@ const routes=[
                 component:()=>import("@/view/profile/Address.vue")
             }
         ]
+    },
+    {
+        path:"/good-detail",
+        name:"GoodDetail",
+        meta:{
+            permission:["user"]
+        },
+        component:()=>import("@/view/Goods/GoodsDeTail.vue")
     }
 ]
 

@@ -14,6 +14,7 @@ import Button from "primevue/button";
 import InputNumber from "primevue/inputnumber";
 import ToastService from "primevue/toastservice";
 import Checkbox from "primevue/checkbox"
+import Carousel from "primevue/carousel";
 
 const app = createApp(App)
 
@@ -31,6 +32,7 @@ app.use(ToastService)
 app.component("Button",Button)
 app.component("InputNumber",InputNumber)
 app.component("Checkbox",Checkbox)
+app.component("Carousel",Carousel)
 /**
  * primeVue end
  */

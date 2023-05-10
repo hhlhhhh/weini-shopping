@@ -52,7 +52,7 @@ const clickedKey = ref(0)   //控制sider高亮
     width:1200px;
     height: 70px;
     color: #333333;
-    margin: 0 auto 0;
+    margin: 0 auto;
     .header-logo{
       width: 200px;
       text-align: center;
