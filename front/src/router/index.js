@@ -80,6 +80,14 @@ const routes=[
             permission:["user"]
         },
         component:()=>import("@/view/Goods/GoodsDeTail.vue")
+    },
+    {
+        path:"/user",
+        name:"UserDetail",
+        meta:{
+            permission:["user"]
+        },
+        component:()=>import("@/view/profile/UserDetail.vue")
     }
 ]
 
