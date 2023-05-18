@@ -17,6 +17,14 @@ const routes=[
         component:()=>import("@/view/Login.vue")
     },
     {
+        path:"/register",
+        name:"Register",
+        meta:{
+            permission:["user"]
+        },
+        component:()=>import("@/view/register.vue")
+    },
+    {
         path:"/home",
         name:"Home",
         meta:{
@@ -79,7 +87,7 @@ const routes=[
         meta:{
             permission:["user"]
         },
-        component:()=>import("@/view/Goods/GoodsDeTail.vue")
+        component:()=>import("@/view/goods/GoodsDeTail.vue")
     },
     {
         path:"/user",
@@ -88,6 +96,22 @@ const routes=[
             permission:["user"]
         },
         component:()=>import("@/view/profile/UserDetail.vue")
+    },
+    {
+        path:"/order",
+        name:"Order",
+        meta:{
+            permission:["user"]
+        },
+        component:()=>import("@/view/pay/order.vue"),
+    },
+    {
+        path:"/pay",
+        name:"Pay",
+        meta:{
+            permission:["user"]
+        },
+        component:()=>import("@/view/pay/pay.vue")
     }
 ]
 

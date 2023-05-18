@@ -40,7 +40,8 @@ i{
   top: 0;
   width:100%;
   height:100vh;
-  background: linear-gradient(200deg, #f3e7e9, #325a96);
+  background-color: rgb(243, 247, 249);
+  /*background: linear-gradient(200deg, #f3e7e9, #325a96);*/
   z-index: -1;
 }
 h1{

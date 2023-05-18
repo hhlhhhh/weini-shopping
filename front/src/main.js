@@ -4,7 +4,11 @@ import PrimeVue from "primevue/config";
 import store from "./store";
 import router from "./router";
 
+//arco design图标库
+import ArcoVueIcon from '@arco-design/web-vue/es/icon';
+
 import '@arco-design/web-vue/dist/arco.css';
+
 
 import "primevue/resources/themes/lara-light-indigo/theme.css";//theme
 import "primevue/resources/primevue.min.css";//core
@@ -22,6 +26,7 @@ app.use(PrimeVue, { ripple: true });
 app.use(store)
 app.use(router)
 app.use(ToastService)
+app.use(ArcoVueIcon)
 
 
 
