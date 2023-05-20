@@ -48,7 +48,7 @@ public class JwtFilter extends AuthenticatingFilter {
                 }
 
                 Map<String, Claim> mes = JwtFactory.getMes(jwt);
-                String id = mes.get("userId").asString();
+                String id = mes.get("id").asString();
                 String redisJwt = (String)template.opsForValue().get(id + "-jwt");
                 if("".equals(redisJwt) || !jwt.equals(redisJwt)){
                     throw new ExpiredCredentialsException("登录已退出，请重新登录");

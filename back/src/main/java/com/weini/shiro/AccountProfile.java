@@ -9,6 +9,6 @@ public class AccountProfile implements Serializable {
     private String id;
     private String nickname;
     private String signature;
-    private String authority;
+    private String role;
     private String avatar;
 }

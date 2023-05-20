@@ -55,6 +55,7 @@ public class JwtFactory {
 
         String token= JWT.create()
                 .withHeader(new HashMap<>())
+                .withClaim("id",user.getId())
                 .withExpiresAt(calendar.getTime())
                 .sign(Algorithm.RSA256(privateKey));
         return token;

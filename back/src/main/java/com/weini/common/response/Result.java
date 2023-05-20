@@ -4,6 +4,9 @@ import lombok.Data;
 
 import java.io.Serializable;
 
+/**
+ * 数据返回值封装
+ */
 @Data
 public class Result implements Serializable {
 

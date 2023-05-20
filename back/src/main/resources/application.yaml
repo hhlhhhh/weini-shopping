@@ -4,6 +4,10 @@ spring:
     url: jdbc:mysql://localhost:3306/weini-shopping
     username: root
     password: admin123
+  mail:
+    host: smtp.163.com
+    username: h_1796791168@163.com
+    password: OOWFYABHFAIROUYV
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**Mapper.xml
   global-config:
@@ -14,3 +18,8 @@ mybatis-plus:
     map-underscore-to-camel-case: true
 server:
   port: 8090
+weini:
+  image:
+    url: C:/Users/86152/Desktop/weini-image
+  email:
+    from: h_1796791168@163.com
