@@ -90,9 +90,9 @@ public class AccountServiceImpl extends ServiceImpl<UserMapper, User> implements
 
     @Override
     public User getUserById(String id) {
-        if(Objects.isNull(id))return new User();
         return userMapper.selectById(id);
     }
+
 
     @Override
     public Result register(User user, String code, HttpServletRequest req,HttpServletResponse rep) {

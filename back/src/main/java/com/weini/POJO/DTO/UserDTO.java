@@ -5,12 +5,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @Accessors(chain = true)
 @Data
 @NoArgsConstructor
-public class UserDTO {
+public class UserDTO implements Serializable {
     private String id;
     private String nickname;
     private int balance;

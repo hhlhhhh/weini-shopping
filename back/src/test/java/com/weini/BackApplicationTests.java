@@ -6,7 +6,11 @@ import cn.smallbun.screw.core.engine.EngineFileType;
 import cn.smallbun.screw.core.engine.EngineTemplateType;
 import cn.smallbun.screw.core.execute.DocumentationExecute;
 import cn.smallbun.screw.core.process.ProcessConfig;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.weini.POJO.Do.User;
 import com.weini.common.response.State;
+import com.weini.mapper.UserMapper;
 import com.weini.service.AccountService;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -27,6 +31,9 @@ class BackApplicationTests {
 
     @Autowired
     Environment environment;
+
+    @Resource
+    UserMapper userMapper;
 
     @Test
     void contextLoads() {   //生成数据表结构关系表
@@ -105,5 +112,14 @@ class BackApplicationTests {
     @Test
     void test2(){
         System.out.println(State.ERROROPERATE.name());
+    }
+
+    @Test
+    void test3(){
+        Page<User> pageWrapper = new Page<>(2,2,true);
+
+        Page<User> userPage = userMapper.selectPage(pageWrapper, new QueryWrapper<>());
+
+        System.out.println(userPage);
     }
 }

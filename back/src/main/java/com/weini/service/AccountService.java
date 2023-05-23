@@ -8,15 +8,15 @@ import javax.servlet.http.HttpServletResponse;
 
 public interface AccountService {
 
-    Result loginByPassword(String phone,String password,HttpServletRequest request,HttpServletResponse response);
+    Result loginByPassword(String phone,String password,HttpServletRequest request,HttpServletResponse response);   //密码登录
 
-    Result loginByEmail(String email, String code, HttpServletResponse response);
+    Result loginByEmail(String email, String code, HttpServletResponse response);   //邮箱登录
 
-    Result getLoginEmailCode(String email);
+    Result getLoginEmailCode(String email);     //获取登录邮箱验证码
 
-    Result getRegisterEmailCode(String email);
+    Result getRegisterEmailCode(String email);      //获取注册邮箱验证码
 
-    User getUserById(String id);    //获取用户信息
+    User getUserById(String id);
 
-    Result register(User user, String code, HttpServletRequest req,HttpServletResponse rep);
+    Result register(User user, String code, HttpServletRequest req,HttpServletResponse rep);    //注册
 }

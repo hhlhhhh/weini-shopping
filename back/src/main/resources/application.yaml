@@ -15,7 +15,7 @@ mybatis-plus:
       logic-delete-field: delFlag
       logic-delete-value: 1
   configuration:
-    map-underscore-to-camel-case: true
+    map-underscore-to-camel-case: false
 server:
   port: 8090
 weini:
