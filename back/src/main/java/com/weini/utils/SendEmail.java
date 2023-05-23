@@ -23,7 +23,7 @@ public class SendEmail {
 
     public void registerMail(String to){
         int verification=RandomId.verifyCode();
-        String content="尊敬的用户您好，您的注册验证码是"+verification+"验证码5分钟内有效。如不是本人操作，请忽略此邮件！";
+        String content="尊敬的用户您好，您的注册验证码是"+verification+"，验证码5分钟内有效。如不是本人操作，请忽略此邮件！";
         SimpleMailMessage message = new SimpleMailMessage();
         message.setSubject("【weini-mail】注册验证码");
         message.setText(content);
@@ -38,7 +38,7 @@ public class SendEmail {
 
     public void loginMail(String to){
         int verification=RandomId.verifyCode();
-        String content="尊敬的用户您好，您的登录验证码是"+verification+"验证码5分钟内有效。如不是本人操作，请忽略此邮件！";
+        String content="尊敬的用户您好，您的登录验证码是"+verification+"，验证码5分钟内有效。如不是本人操作，请忽略此邮件！";
         SimpleMailMessage message = new SimpleMailMessage();
         message.setSubject("【weini-mail】登录验证码");
         message.setText(content);
@@ -47,6 +47,21 @@ public class SendEmail {
         String code=""+verification;
         template.opsForValue().set("LoginVerify:code:"+to,code);
         template.expire("LoginVerify:code:"+to,5, TimeUnit.MINUTES);
+        System.out.println(verification);
+//        sender.send(message);
+    }
+
+    public void updatePasswordMail(String to){
+        int verification=RandomId.verifyCode();
+        String content="尊敬的用户您好，您正在修改密码，验证码为："+verification+"，验证码5分钟内有效。如不是本人操作，请忽略此邮件！";
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setSubject("【weini-mail】修改密码");
+        message.setText(content);
+        message.setTo(to);
+        message.setFrom(from);
+        String code=""+verification;
+        template.opsForValue().set("UpdatePwdVerify:code:"+to,code);
+        template.expire("UpdatePwdVerify:code:"+to,5, TimeUnit.MINUTES);
         System.out.println(verification);
 //        sender.send(message);
     }

@@ -12,9 +12,7 @@ public interface AccountService {
 
     Result loginByEmail(String email, String code, HttpServletResponse response);   //邮箱登录
 
-    Result getLoginEmailCode(String email);     //获取登录邮箱验证码
-
-    Result getRegisterEmailCode(String email);      //获取注册邮箱验证码
+    Result sendEmailCode(String email,String type);     //发送邮箱验证码
 
     User getUserById(String id);
 

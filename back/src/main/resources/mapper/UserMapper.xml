@@ -7,4 +7,12 @@
         update user set user.balance = #{money},update_time = now() where id=#{id} and del_flag='0'
     </update>
 
+    <update id="registerToMerchant">
+        update user set user.role = 'merchant',update_time = now() where id=#{id} and del_flag='0'
+    </update>
+
+    <update id="updatePassword">
+        update user set user.password = #{password},update_time = now() where id=#{id} and del_flag='0'
+    </update>
+
 </mapper>

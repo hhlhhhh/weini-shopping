@@ -3,6 +3,8 @@ package com.weini.service;
 import com.weini.POJO.DTO.UserDTO;
 import com.weini.common.response.Result;
 
+import javax.servlet.http.HttpServletResponse;
+
 public interface UserService {
 
     Result getUserMesById(String id);   //通过id获取用户信息
@@ -17,6 +19,7 @@ public interface UserService {
 
     Result deleteUser(String id);   //删除用户
 
-    Result changePassword(String id,String password);   //修改密码
+    Result changePasswordByOldPwd(String id, String oldPwd, String password, HttpServletResponse response);   //通过旧密码修改密码
 
+    Result changePasswordByEmail(String email, String password, String code, HttpServletResponse response);  //通过邮箱验证码修改密码
 }

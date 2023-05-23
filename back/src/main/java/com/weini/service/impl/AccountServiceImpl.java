@@ -68,24 +68,38 @@ public class AccountServiceImpl extends ServiceImpl<UserMapper, User> implements
         return Result.succ("登录成功");
     }
 
-    @Override
-    public Result getLoginEmailCode(String email) {
-        boolean exists = userMapper.exists(new QueryWrapper<User>().eq("email", email));
-        if(!exists){
-            return Result.fail(State.ERRORPROCESS,"邮箱未注册！");
-        }
-        sendEmail.loginMail(email);
-        return Result.succ("发送成功");
+    //验证邮箱是否注册
+    public boolean verifyUserEmail(String email) {
+        return userMapper.exists(new QueryWrapper<User>().eq("email", email));
     }
 
     @Override
-    public Result getRegisterEmailCode(String email) {
-        boolean exists = userMapper.exists(new QueryWrapper<User>().eq("email", email));
-        if(exists){
-           return Result.fail(State.ERRORPROCESS,"邮箱已注册！");
-        }
-        sendEmail.registerMail(email);
-        return Result.succ("发送成功");
+    public Result sendEmailCode(String email, String type) {
+        if(!RegVerify.verifyEmail(email)) return Result.fail("邮箱格式错误！");
+        Optional<String> optional = Optional.of(type);
+        char[] flag = new char[1];  //判断完成情况，0未开始，1开始，2发送
+
+        optional.filter("login"::equals).ifPresent(e->{
+            if(!verifyUserEmail(email)) throw ParameterErrorException.Builder("邮箱未注册！");
+            flag[0]=1;
+            sendEmail.loginMail(email);
+            flag[0]=2;
+        });
+        optional.filter(e->flag[0]==0&&"register".equals(e)).ifPresent(e->{
+            if(verifyUserEmail(email)) throw ParameterErrorException.Builder("邮箱已注册！");
+            flag[0]=1;
+            sendEmail.registerMail(email);
+            flag[0]=2;
+        });
+        optional.filter(e->flag[0]==0&&"password".equals(e)).ifPresent(e->{
+            if(!verifyUserEmail(email)) throw ParameterErrorException.Builder("邮箱未注册！");
+            flag[0]=1;
+            sendEmail.updatePasswordMail(email);
+            flag[0]=2;
+        });
+
+        if (flag[0] == 2) return Result.succ("发送成功！");
+        return Result.fail(State.ERR,"参数错误！");
     }
 
     @Override
@@ -124,8 +138,6 @@ public class AccountServiceImpl extends ServiceImpl<UserMapper, User> implements
 
         String localUrl = req.getRequestURL().toString().replace(req.getRequestURI(),"");
         user.setId(RandomId.idConstruct())      //初始化用户信息
-                .setCreate_time(new Date())
-                .setUpdate_time(new Date())
                 .setBalance(0)
                 .setAvatar(localUrl+"/image/default-avatar.png")
                 .setRole("user")

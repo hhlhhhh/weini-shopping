@@ -12,6 +12,7 @@ import com.weini.common.response.Result;
 import com.weini.common.response.State;
 import com.weini.mapper.UserMapper;
 import com.weini.service.UserService;
+import com.weini.utils.JwtFactory;
 import com.weini.utils.RegVerify;
 import com.weini.utils.SendEmail;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +20,10 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
@@ -121,16 +122,75 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public Result registerToMerchant(String id) {
-        return null;
+        User user = userMapper.selectById(id);
+        if(user==null)return Result.fail(State.ERR,"无此用户！");
+
+        int res = userMapper.registerToMerchant(id);
+        if(res == 0) return Result.fail(State.ERROROPERATE,"注册商家失败！");
+        return Result.succ("注册商家成功！");
     }
 
     @Override
     public Result deleteUser(String id) {
-        return null;
+        int res = userMapper.deleteById(id);
+        if(res == 0) return Result.fail(State.ERROROPERATE,"删除用户失败！");
+        return Result.succ("用户删除成功！");
+    }
+
+    public Result changePassword(User user,HttpServletResponse response){       //修改密码以及退出登录状态
+        int res = userMapper.updatePassword(user.getId(), user.getPassword());
+        if(res == 0) return Result.fail(State.ERROROPERATE,"更新密码失败");
+
+        template.delete(user.getId()+"-jwt");     //删除登录状态
+
+        String jwt = JwtFactory.create(user);   //重新生成登录凭证
+        response.setHeader("login-auth",jwt);
+        response.setHeader("Access-control-Expose-Headers","login-auth");
+
+        template.opsForValue().set(user.getId() + "-login",jwt,1, TimeUnit.DAYS);  //将jwt放入缓存,缓存1天
+
+        return Result.succ("更改密码成功！");
     }
 
     @Override
-    public Result changePassword(String id, String password) {
-        return null;
+    public Result changePasswordByOldPwd(String id, String oldPwd, String password, HttpServletResponse response) {
+        if(!RegVerify.verifyPassword(password)){
+            return Result.fail("密码格式错误！");
+        }
+        User user = userMapper.selectById(id);
+        if(user==null){
+            return Result.fail("无此用户！");
+        }
+        if(!user.getPassword().equals(oldPwd)){     //验证原来的密码
+            return Result.fail("原密码错误！");
+        }
+        user.setPassword(password);     //将新的密码赋给user，传值下去
+
+        return changePassword(user,response);
+    }
+
+    @Override
+    public Result changePasswordByEmail(String email, String password, String code, HttpServletResponse response) {
+        if(!RegVerify.verifyEmail(email)){
+            return Result.fail("邮箱格式错误！");
+        }
+        if(!RegVerify.verifyPassword(password)){
+            return Result.fail("密码格式错误！");
+        }
+        User user = userMapper.selectOne(new QueryWrapper<User>().eq("email", email));
+        if(user==null){
+            return Result.fail("无此用户！");
+        }
+
+        Object o = template.opsForValue().get("UpdatePwdVerify:code:" + user.getEmail());
+        assert o!=null:"验证码未发送或已过期！";
+        String codeCache = (String) o;
+        if(!codeCache.equals(code)) return Result.fail("验证码错误！");   //验证验证码正确
+
+        user.setPassword(password);     //将密码赋给user
+        Result result = changePassword(user,response);
+
+        template.delete("UpdatePwdVerify:code:" + user.getEmail());    //删除缓存验证码
+        return result;
     }
 }

@@ -1,9 +1,12 @@
 package com.weini.controller;
 
 import com.weini.POJO.Do.User;
+import com.weini.common.exception.ParameterErrorException;
 import com.weini.common.response.Result;
 import com.weini.common.response.State;
 import com.weini.service.AccountService;
+import com.weini.utils.RegVerify;
+import com.weini.utils.SendEmail;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Objects;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/account")
@@ -32,11 +36,7 @@ public class AccountController {
 
     @GetMapping("/email/code")
     public Result getEmailCode(@RequestParam("email")String email,@RequestParam String type){
-        if(Objects.isNull(email))return Result.fail("邮箱不能为空");
-        assert type!=null:"参数缺失！";
-        if("login".equals(type))return accountService.getLoginEmailCode(email);
-        else if("register".equals(type))return accountService.getRegisterEmailCode(email);
-        else return Result.fail(State.ERR,"参数错误！");
+        return accountService.sendEmailCode(email,type);
     }
 
     @RequiresAuthentication
