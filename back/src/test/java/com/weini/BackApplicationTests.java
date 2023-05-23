@@ -8,6 +8,7 @@ import cn.smallbun.screw.core.execute.DocumentationExecute;
 import cn.smallbun.screw.core.process.ProcessConfig;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.weini.POJO.DTO.UserDTO;
 import com.weini.POJO.Do.User;
 import com.weini.common.response.State;
 import com.weini.mapper.UserMapper;
@@ -22,6 +23,7 @@ import org.springframework.core.env.Environment;
 import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.util.ArrayList;
+import java.util.Optional;
 
 @SpringBootTest
 class BackApplicationTests {
@@ -121,5 +123,17 @@ class BackApplicationTests {
         Page<User> userPage = userMapper.selectPage(pageWrapper, new QueryWrapper<>());
 
         System.out.println(userPage);
+    }
+
+    @Test
+    void test4(){
+        Optional<UserDTO> optional = Optional.of(new UserDTO());
+        System.out.println("kk");
+        optional.map(UserDTO::getSignature).filter(e->{
+            System.out.println(e);
+            System.out.println(e==null);
+            return true;
+        });
+        System.out.println("kkki");
     }
 }

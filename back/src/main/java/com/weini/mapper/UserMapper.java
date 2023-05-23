@@ -5,4 +5,6 @@ import com.weini.POJO.Do.User;
 
 public interface UserMapper extends BaseMapper<User> {
 
+    public int chargeMoney(String id,int money);
+
 }
