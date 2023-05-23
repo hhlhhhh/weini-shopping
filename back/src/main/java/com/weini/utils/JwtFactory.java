@@ -53,12 +53,11 @@ public class JwtFactory {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MINUTE, 1440);
 
-        String token= JWT.create()
+        return JWT.create()
                 .withHeader(new HashMap<>())
                 .withClaim("id",user.getId())
                 .withExpiresAt(calendar.getTime())
                 .sign(Algorithm.RSA256(privateKey));
-        return token;
     }
 
     //验证token是否正确

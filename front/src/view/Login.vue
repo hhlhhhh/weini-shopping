@@ -10,14 +10,14 @@
            <div class="login-by-password">
              <ul>
                <li>
-                 <a-input-number placeholder="手机号码" hide-button allow-clear>
+                 <a-input-number placeholder="手机号码" hide-button allow-clear v-model="form.phone">
                    <template #prefix>
                      <icon-phone />
                    </template>
                  </a-input-number>
                </li>
                <li>
-                 <a-input-password placeholder="密码">
+                 <a-input-password placeholder="密码" v-model="form.password">
                    <template #prefix>
                      <icon-lock />
                    </template>
@@ -39,22 +39,22 @@
            <div class="login-by-email">
              <ul>
                <li>
-                 <a-input placeholder="邮箱" allow-clear>
+                 <a-input placeholder="邮箱" allow-clear v-model="form.email">
                    <template #prefix>
                      <icon-email />
                    </template>
                  </a-input>
                </li>
                <li class="code-row">
-                 <a-input-number placeholder="验证码" hide-button>
+                 <a-input-number placeholder="验证码" hide-button v-model="form.authCode">
                    <template #prefix>
                      <icon-code-square />
                    </template>
                  </a-input-number>
-                 <a-button class="get-email-code-btn">获取验证码</a-button>
+                 <a-button class="get-email-code-btn" @click="getEmailCode">{{getEmailCodeWaitTime===0?"获取验证码":getEmailCodeWaitTime}}</a-button>
                </li>
                <li style="margin-top: 36px;">
-                 <button class="login-btn">登录</button>
+                 <button class="login-btn" :disabled="EmailLoginWait" @click="loginEvent">登录</button>
                </li>
                <li>
                  <a class="to-register">立即注册</a>
@@ -71,7 +71,7 @@
 <script setup>
 import {ref,reactive,getCurrentInstance} from "vue";
 import {useRoute} from "vue-router";
-import {getEmailCodeApi} from "@/http/user";
+import {getEmailCodeApi,loginByEmailApi} from "@/http/user";
 import {useToast} from "primevue/usetoast";
 const toast = useToast()
 
@@ -82,29 +82,33 @@ const route = useRoute()
 
 //true为手机密码登录
 //false为邮箱验证码登录
-let loginType = ref(true)
-let getEmailCodeWaitTime=ref(0);
+let loginType = ref(false)
+
+let getEmailCodeWaitTime=ref(0);  //获取验证码等待时间
+let EmailLoginWait = ref(false)  //邮箱登录等待
 
 let form  = reactive({
-  phone:"",
+  phone:null,
   password:"",
   email:"",
-  authCode:""
+  authCode:null
 })
 
+//邮箱验证格式
 let emailVerify = /^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/
 
-
+//获取邮箱验证码
 const getEmailCode = ()=>{
-  if(!emailVerify.test(form.email)){
+  if(!emailVerify.test(form.email)){  //邮箱格式验证
+    toast.add({severity: 'warn', summary: '邮箱格式错误！', life: 1500})
     return
   }
-  if(getEmailCodeWaitTime.value>0){
+  if(getEmailCodeWaitTime.value>0){   //提示勿重复发送
     toast.add({severity: 'warn', summary: '发送给' + form.email + "!", detail: '请勿重复发送！', life: 3000})
     return;
   }
   getEmailCodeWaitTime.value=60
-  const timeLoop =setInterval(function (){
+  const timeLoop =setInterval(function (){      //倒计时
     if(getEmailCodeWaitTime.value<=0){
       clearInterval(timeLoop)
       return
@@ -117,6 +121,62 @@ const getEmailCode = ()=>{
       toast.add({severity: 'success', summary: '发送给' + form.email + "!", detail: '发送成功！', life: 3000})
     }else{
       toast.add({ severity: 'error', summary: '发送给'+form.email+"!", detail: '发送失败！', life: 3000 })
+    }
+  })
+  toast.add({severity: 'success', summary: '正在发送，请稍等！', detail: '发送中！', life: 2000})
+}
+
+//手机密码登录
+function loginByPassword(){
+  console.log(loginType.value)
+}
+
+//邮箱登录
+function loginByEmail(){
+  if(!emailVerify.test(form.email)){  //邮箱格式验证
+    return new Promise((resolve, reject)=>{
+      reject({
+        "code": 103,
+        "msg": "邮箱格式错误！"
+      })
+    })
+  }
+  if(!/^\d{4}$/.test(form.authCode)){
+    return new Promise((resolve, reject)=>{
+      reject({
+        "code": 104,
+        "msg": "验证码格式错误！"
+      })
+    })
+  }
+  EmailLoginWait.value = true
+  try {
+    let a = []
+    a[5]=6
+    return loginByEmailApi({
+      "arg1": form.email,
+      "arg2": form.authCode
+    })
+  }catch (e) {
+    EmailLoginWait.value = false
+    return new Promise((resolve, reject)=>{
+      reject({
+        code: "460",
+        msg: e.msg
+      })
+    })
+  }
+}
+
+//登录
+const loginEvent = ()=>{
+  const req = loginType.value?loginByPassword:loginByEmail;
+
+  req().then((res)=>{
+
+  },(err)=>{
+    if(err.code===460){
+      toast.add({severity: 'error', summary: err.msg , life: 1500})
     }
   })
 }
@@ -182,6 +242,7 @@ const getEmailCode = ()=>{
           .login-btn{
             width: 100%;
             height: 50px;
+            cursor: pointer;
             line-height: 50px;
             color: #FFFFFF;
             font-size: 20px;
@@ -189,7 +250,9 @@ const getEmailCode = ()=>{
             border: none;
             border-radius: 25px;
             background-color: rgb(0, 118, 254);
-
+            &:disabled{
+              background-color: #84add8;
+            }
           }
         }
         .code-row{

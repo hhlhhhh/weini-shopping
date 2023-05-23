@@ -6,19 +6,30 @@ import cn.smallbun.screw.core.engine.EngineFileType;
 import cn.smallbun.screw.core.engine.EngineTemplateType;
 import cn.smallbun.screw.core.execute.DocumentationExecute;
 import cn.smallbun.screw.core.process.ProcessConfig;
+import com.weini.common.response.State;
+import com.weini.service.AccountService;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.env.Environment;
 
+import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.util.ArrayList;
 
 @SpringBootTest
 class BackApplicationTests {
 
+    @Resource
+    AccountService service;
+
+    @Autowired
+    Environment environment;
+
     @Test
-    void contextLoads() {
+    void contextLoads() {   //生成数据表结构关系表
         HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setDriverClassName("com.mysql.cj.jdbc.Driver");
         hikariConfig.setJdbcUrl("jdbc:mysql://127.0.0.1:3306/weini-shopping");
@@ -83,4 +94,16 @@ class BackApplicationTests {
         new DocumentationExecute(config).execute();
     }
 
+    @Test
+    void test1(){
+        String port = environment.getProperty("server.port");
+        String contextPath = environment.getProperty("server.servlet.context-path");
+        String host = environment.getProperty("server.host");
+        System.out.println("http://" + host + ":" + port + contextPath);
+    }
+
+    @Test
+    void test2(){
+        System.out.println(State.ERROROPERATE.name());
+    }
 }

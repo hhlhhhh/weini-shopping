@@ -1,17 +1,18 @@
-package com.weini.POJO.Do;
+package com.weini.POJO.DTO;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.util.Date;
 
 @Accessors(chain = true)
 @Data
-public class User {
+@NoArgsConstructor
+public class UserDTO {
     private String id;
     private String nickname;
-    private String password;
     private int balance;
     private String sex;
     private String phone;
@@ -22,5 +23,4 @@ public class User {
     private Date create_time;
     private Date update_time;
     private Date del_time;
-    private String del_flag;
 }

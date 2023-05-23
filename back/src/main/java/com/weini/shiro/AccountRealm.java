@@ -3,7 +3,7 @@ package com.weini.shiro;
 
 import com.auth0.jwt.interfaces.Claim;
 import com.weini.POJO.Do.User;
-import com.weini.service.UserService;
+import com.weini.service.AccountService;
 import com.weini.utils.JwtFactory;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -21,7 +21,7 @@ import java.util.Objects;
 public class AccountRealm extends AuthorizingRealm{
 
     @Autowired
-    UserService userService;
+    AccountService accountService;
 
     @Override
     public boolean supports(AuthenticationToken token) {
@@ -46,7 +46,7 @@ public class AccountRealm extends AuthorizingRealm{
         Map<String, Claim> mes = JwtFactory.getMes(jwt);
 
         String id = mes.get("id").asString();   //获取用户id
-        User user = userService.getUserById(id);  //通过id查询用户
+        User user = accountService.getUserById(id);  //通过id查询用户
 
         if(Objects.isNull(user.getId()))throw new UnknownAccountException("用户不存在");
 

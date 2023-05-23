@@ -3,7 +3,7 @@ import axios from "axios";
 
 // axios.defaults.withCredentials = false;
 // // axios.defaults.headers.common['token'] =  AUTH_TOKEN
-// axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 // axios.defaults.headers.put['Content-Type'] = 'application/json;charset=UTF-8';
 // // 前端设置允许跨域
 // axios.defaults.headers.post["Access-Control-Allow-Origin-Type"] = "*";

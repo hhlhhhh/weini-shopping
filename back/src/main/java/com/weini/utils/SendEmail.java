@@ -32,7 +32,8 @@ public class SendEmail {
         String code=""+verification;
         template.opsForValue().set("RegisterVerify:code:"+to,code);
         template.expire("RegisterVerify:code:"+to,5, TimeUnit.MINUTES);
-        sender.send(message);
+        System.out.println(verification);
+//        sender.send(message);
     }
 
     public void loginMail(String to){
@@ -46,7 +47,8 @@ public class SendEmail {
         String code=""+verification;
         template.opsForValue().set("LoginVerify:code:"+to,code);
         template.expire("LoginVerify:code:"+to,5, TimeUnit.MINUTES);
-        sender.send(message);
+        System.out.println(verification);
+//        sender.send(message);
     }
 
 }
