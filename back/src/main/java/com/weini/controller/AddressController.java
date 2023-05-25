@@ -9,8 +9,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Objects;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/address")
 public class AddressController {
+
     @Autowired
     UserService userService;
 

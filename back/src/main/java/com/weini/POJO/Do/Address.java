@@ -1,5 +1,7 @@
 package com.weini.POJO.Do;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -18,8 +20,11 @@ public class Address {
     private String town;
     private String details;
     private String state;
-    private String crate_time;
-    private String update_time;
+    @TableField(fill = FieldFill.INSERT)
+    private Date create_time;
+
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private Date update_time;
     private String del_time;
     private String del_flag;
 }
