@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.weini.POJO.DTO.UserDTO;
 import com.weini.POJO.Do.User;
+import com.weini.common.annotation.WeiniPermissionAnnotation;
 import com.weini.common.response.State;
 import com.weini.mapper.UserMapper;
 import com.weini.service.AccountService;
@@ -135,5 +136,15 @@ class BackApplicationTests {
             return true;
         });
         System.out.println("kkki");
+    }
+
+    @Test
+    void test5(){
+        System.out.println(userMapper.selectOne(new QueryWrapper<User>().eq("id", "1660896290737836033").eq("del_flag","1")));
+    }
+
+    @Test
+    void test6(){
+        System.out.println(1);
     }
 }

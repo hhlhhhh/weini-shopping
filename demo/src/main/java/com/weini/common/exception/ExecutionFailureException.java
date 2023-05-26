@@ -1,6 +1,5 @@
 package com.weini.common.exception;
 
-//操作执行失败异常
 public class ExecutionFailureException extends RuntimeException {
     private ExecutionFailureException(String msg){
         super(msg);

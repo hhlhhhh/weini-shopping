@@ -1,6 +1,5 @@
 package com.weini.common.exception;
 
-//参数缺少异常
 public class MissedParameterException extends RuntimeException{
     private MissedParameterException(String msg){
         super(msg);

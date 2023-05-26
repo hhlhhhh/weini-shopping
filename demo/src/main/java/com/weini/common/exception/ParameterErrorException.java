@@ -1,6 +1,5 @@
 package com.weini.common.exception;
 
-//参数错误异常
 public class ParameterErrorException extends RuntimeException {
     private ParameterErrorException(String msg){
         super(msg);

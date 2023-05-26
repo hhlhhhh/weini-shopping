@@ -1,15 +1,13 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/weini-shopping
+    url: jdbc:mysql://localhost:3306/com.weini-shopping
     username: root
     password: admin123
   mail:
     host: smtp.163.com
     username: h_1796791168@163.com
     password: OOWFYABHFAIROUYV
-  aop:
-    proxy-target-class: true
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**Mapper.xml
   global-config:
@@ -19,9 +17,9 @@ mybatis-plus:
   configuration:
     map-underscore-to-camel-case: false
 server:
-  port: 8090
+  port: 8080
 weini:
   image:
-    url: C:/Users/86152/Desktop/weini-image
+    url: C:/Users/86152/Desktop/com.weini-image
   email:
     from: h_1796791168@163.com

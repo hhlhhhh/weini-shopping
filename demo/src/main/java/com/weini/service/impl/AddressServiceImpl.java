@@ -1,9 +1,7 @@
 package com.weini.service.impl;
 
-import com.auth0.jwt.interfaces.Claim;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.weini.POJO.Do.Address;
-import com.weini.common.exception.ExecutionFailureException;
 import com.weini.common.response.Result;
 import com.weini.common.response.State;
 import com.weini.mapper.AddressMapper;

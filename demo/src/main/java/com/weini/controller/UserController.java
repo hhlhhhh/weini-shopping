@@ -1,11 +1,8 @@
 package com.weini.controller;
 
 import com.weini.POJO.DTO.UserDTO;
-import com.weini.POJO.Do.User;
-import com.weini.common.annotation.WeiniPermissionAnnotation;
 import com.weini.common.response.Result;
 import com.weini.service.UserService;
-import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -28,7 +25,7 @@ public class UserController {
         return userService.getUserList(page,pageSize);
     }
 
-    @RequiresAuthentication
+
     @PutMapping("/charge")
     public Result chargeMoney(@RequestParam String id,@RequestParam Integer money){
         return userService.chargeMoney(id,money);
@@ -64,10 +61,9 @@ public class UserController {
         return Result.fail("参数错误！");
     }
 
-    @WeiniPermissionAnnotation(param = "user",method = "getId")
     @GetMapping("/test")
-    public String test(@RequestBody User user){
-        return "555";
+    public String test(){
+        return "123";
     }
 
 }
