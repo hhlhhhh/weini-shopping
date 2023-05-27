@@ -145,6 +145,7 @@ class BackApplicationTests {
 
     @Test
     void test6(){
-        System.out.println(1);
+        Object o = new User();
+        System.out.println(o.getClass());
     }
 }

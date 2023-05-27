@@ -3,7 +3,7 @@
 <mapper namespace="com.weini.mapper.AddressMapper">
 
     <update id="cancelDefaultAddress">
-        update address set address.state = 0,update_time = now() where address.state = '1' and del_flag='0'
+        update address set address.state = 0,update_time = now() where user_id=#{id} and address.state = '1' and del_flag='0'
     </update>
 
     <update id="setDefaultAddress">

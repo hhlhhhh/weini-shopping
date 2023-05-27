@@ -64,7 +64,7 @@ public class UserController {
         return Result.fail("参数错误！");
     }
 
-    @WeiniPermissionAnnotation(param = "user",method = "getId")
+    @WeiniPermissionAnnotation(param = "user")
     @GetMapping("/test")
     public String test(@RequestBody User user){
         return "555";

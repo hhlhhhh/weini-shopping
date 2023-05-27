@@ -18,7 +18,7 @@ public class Address {
     private String province;
     private String city;
     private String town;
-    private String details;
+    private String detail;
     private String state;
     @TableField(fill = FieldFill.INSERT)
     private Date create_time;

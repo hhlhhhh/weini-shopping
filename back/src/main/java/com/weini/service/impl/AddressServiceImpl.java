@@ -1,20 +1,17 @@
 package com.weini.service.impl;
 
-import com.auth0.jwt.interfaces.Claim;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.weini.POJO.Do.Address;
-import com.weini.common.exception.ExecutionFailureException;
+import com.weini.common.exception.MissedParameterException;
 import com.weini.common.response.Result;
 import com.weini.common.response.State;
 import com.weini.mapper.AddressMapper;
 import com.weini.service.AddressService;
-import com.weini.utils.JwtFactory;
 import com.weini.utils.RandomId;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Service
@@ -24,31 +21,24 @@ public class AddressServiceImpl implements AddressService {
     AddressMapper addressMapper;
 
     @Override
-    public Result getAllUserAddress(HttpServletRequest request) {
-        String authorization = request.getHeader("Authorization");
-        String id = JwtFactory.getMes(authorization).get("id").asString();  //获取用户id
-
+    public Result getAllUserAddress(String id) {
         List<Address> addressList = addressMapper.selectList(new QueryWrapper<Address>().eq("user_id", id));
-
         return Result.succ(addressList);
     }
 
     @Transactional
     @Override
-    public Result addUserAddress(Address address, HttpServletRequest request) {
-        String authorization = request.getHeader("Authorization");
-        String id = JwtFactory.getMes(authorization).get("id").asString();
+    public Result addUserAddress(Address address) {
         int cRes = 1;
 
         if("1".equals(address.getState())){
-            addressMapper.cancelDefaultAddress();
-            if(addressMapper.selectOne(new QueryWrapper<Address>().eq("state","1").eq("user_id",id))!=null){    //判断是否取消默认地址是否成功
+            addressMapper.cancelDefaultAddress(address.getUser_id());
+            if(addressMapper.selectOne(new QueryWrapper<Address>().eq("state","1").eq("user_id",address.getUser_id()))!=null){    //判断是否取消默认地址是否成功
                 cRes = 0;
                 address.setState("0");
             }
         }
 
-        address.setUser_id(id);
         address.setId(RandomId.idConstruct());  //生成地址唯一id
 
         int res = addressMapper.insert(address);
@@ -62,11 +52,11 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    public Result deleteUserAddress(String id, HttpServletRequest request) {
-        String authorization = request.getHeader("Authorization");
-        String userId = JwtFactory.getMes(authorization).get("id").asString();
-
-        int res = addressMapper.delete(new QueryWrapper<Address>().eq("user_id", userId).eq("id", id));
+    public Result deleteUserAddress(Address address) {
+        if(address.getId()==null){
+            throw MissedParameterException.Builder("未指定地址id！");
+        }
+        int res = addressMapper.delete(new QueryWrapper<Address>().eq("user_id", address.getUser_id()).eq("id", address.getId()));
         if(res==0){
             return Result.fail(State.ERROROPERATE,"删除地址失败！");
         }
@@ -74,26 +64,25 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    public Result getAddressDetail(String id,HttpServletRequest request) {
-        String authorization = request.getHeader("Authorization");
-        String userId = JwtFactory.getMes(authorization).get("id").asString();
+    public Result getAddressDetail(Address address) {
+        if(address.getId()==null){
+            throw MissedParameterException.Builder("未指定地址id！");
+        }
+        Address res = addressMapper.selectOne(new QueryWrapper<Address>().eq("id", address.getId()).eq("user_id", address.getUser_id()));
 
-        Address address = addressMapper.selectOne(new QueryWrapper<Address>().eq("id", id).eq("user_id", userId));
-
-        return Result.succ(address);
+        return Result.succ(res);
     }
 
     @Transactional
     @Override
-    public Result setDefaultAddress(String id,HttpServletRequest request) {
-        String authorization = request.getHeader("Authorization");
-        String userId = JwtFactory.getMes(authorization).get("id").asString();
+    public Result setDefaultAddress(Address address) {
+        if(address.getId()==null){
+            throw MissedParameterException.Builder("未指定地址id！");
+        }
+        addressMapper.cancelDefaultAddress(address.getUser_id());
+        addressMapper.setDefaultAddress(address.getId());
 
-        addressMapper.cancelDefaultAddress();
-
-        addressMapper.setDefaultAddress(id);
-
-        return null;
+        return Result.succ("默认地址更改成功！");
     }
 
 

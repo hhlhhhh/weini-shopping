@@ -8,7 +8,7 @@ import lombok.experimental.Accessors;
 import java.util.Date;
 @Accessors(chain = true)
 @Data
-public class collect {
+public class Collect {
     public String id;
     public String userId;
 
