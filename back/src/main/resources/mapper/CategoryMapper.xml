@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.weini.mapper.CategoryMapper">
+
+    <resultMap id="CategoryCommodity" type="com.weini.POJO.Do.CategoryCommodity">
+        <id column="id" property="id"/>
+        <result column="commodity_id" property="user_id"/>
+        <result column="category_id" property="category_id"/>
+        <result column="create_time" property="create_time"/>
+        <result column="update_time" property="update_time"/>
+        <association columnPrefix="cc_" property="category" javaType="com.weini.POJO.Do.Category">
+            <id column="id" property="id"/>
+            <result column="name" property="name"/>
+            <result column="create_time" property="create_time"/>
+            <result column="update_time" property="update_time"/>
+        </association>
+    </resultMap>
+
+    <select id="getCategoryListByCommodity" resultMap="CategoryCommodity">
+        select * from category left join commodity_category cc on category.id = cc.category_id where cc.commodity_id=#{id} and  category.del_flag='0' and cc.del_flag='0'
+    </select>
+
+</mapper>

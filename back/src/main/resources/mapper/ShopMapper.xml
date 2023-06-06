@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.weini.mapper.ShopMapper">
+    <select id="getSelledTop" resultType="com.weini.POJO.Do.Commodity">
+        select * from commodity where `shop_id`=#{id} and `del_flag`='0' order by `selled` desc limit 0,3
+    </select>
+
+</mapper>
