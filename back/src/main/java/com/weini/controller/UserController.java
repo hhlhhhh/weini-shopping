@@ -1,15 +1,18 @@
 package com.weini.controller;
 
+import com.auth0.jwt.interfaces.Claim;
 import com.weini.POJO.DTO.UserDTO;
 import com.weini.POJO.Do.User;
-import com.weini.common.annotation.WeiniPermissionAnnotation;
 import com.weini.common.response.Result;
 import com.weini.service.UserService;
+import com.weini.utils.JwtFactory;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
@@ -18,8 +21,11 @@ public class UserController {
     @Resource
     UserService userService;
 
-    @GetMapping("/detail/{id}")
-    public Result getUserMesById(@PathVariable("id") String id){
+    @GetMapping("/detail")
+    public Result getUserMesById(HttpServletRequest request){
+        String authorization = request.getHeader("Authorization");
+        Map<String, Claim> mes = JwtFactory.getMes(authorization);
+        String id = mes.get("id").asString();
         return userService.getUserMesById(id);
     }
 
@@ -64,7 +70,7 @@ public class UserController {
         return Result.fail("参数错误！");
     }
 
-    @WeiniPermissionAnnotation(param = "user")
+
     @GetMapping("/test")
     public String test(@RequestBody User user){
         return "555";

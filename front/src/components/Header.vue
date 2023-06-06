@@ -9,16 +9,17 @@
             :preview="false"
         />
       </div>
-      <div>
+      <div @click="reLoadHome">
         首页
       </div>
       <div>分类</div>
-      <div>购物车</div>
+      <div @click="router.push({name:'ShoppingCart'})">购物车</div>
       <div>
         <a-input-search :style="{width:'300px'}" placeholder="请输入关键字"/>
       </div>
-      <div>
-        <a-button type="text" style="color: rgb(99, 126, 171);font-size: 16px">登录 / 注册</a-button>
+      <div style="display: flex" v-if="!loginState">
+        <a-button type="text" style="color: rgb(99, 126, 171);font-size: 16px" @click="router.push({name:'Login'})">登录</a-button>
+        <a-button type="text" style="color: rgb(99, 126, 171);font-size: 16px" @click="router.push({name:'Register'})">注册</a-button>
       </div>
       <div/>
     </div>
@@ -27,6 +28,27 @@
 </template>
 
 <script setup>
+import {useRouter} from "vue-router";
+import {onMounted , ref} from "vue";
+
+const router = useRouter()
+
+let loginState = ref(false)
+
+const reLoadHome = ()=>{
+  location.reload()
+}
+
+function init(){
+  let item = localStorage.getItem("userMes");
+  if(item){
+    loginState.value=true
+  }else{
+    loginState.value=false
+  }
+}
+
+onMounted(init)
 
 </script>
 

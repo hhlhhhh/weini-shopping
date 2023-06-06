@@ -1,21 +1,18 @@
 package com.weini.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.weini.POJO.DTO.UserDTO;
 import com.weini.POJO.Do.Commodity;
-import com.weini.POJO.Do.User;
-import com.weini.common.exception.MissedParameterException;
+import com.weini.POJO.Do.CommodityMedia;
 import com.weini.common.exception.ParameterErrorException;
 import com.weini.common.response.Result;
 import com.weini.mapper.CommodityMapper;
+import com.weini.mapper.TypeMapper;
+import com.weini.service.CommodityMediaService;
 import com.weini.service.CommodityService;
+import com.weini.service.TypeService;
 import com.weini.utils.RandomId;
-import com.weini.utils.RegVerify;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -28,16 +25,25 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
     @Resource
     CommodityMapper commodityMapper;
 
+    @Resource
+    CommodityMediaService commodityMediaService;
+
+    @Resource
+    TypeMapper typeMapper;
 
     @Override
-    public Result getCommoditiesByPage(Integer page, Integer pageSize) {
-        if(page<1||pageSize<1)throw ParameterErrorException.Builder("参数应为整数！");
+    public Result getCommoditiesByPage(Integer current, Integer size) {
+        if(current<1||size<1)throw ParameterErrorException.Builder("参数应为整数！");
 
-        Page<Commodity> commodityPage = new Page<>(page,pageSize,true);
+        Page<Commodity> commodityPage = new Page<>(current,size,true);
         Page<Commodity> selectPage = commodityMapper.selectPage(commodityPage, new QueryWrapper<Commodity>());
-        if(selectPage.getCurrent()!=page){        //如果查不到返回空
+        if(selectPage.getCurrent()!=current){        //如果查不到返回空
             return Result.succ(new ArrayList<>());
         }
+        selectPage.getRecords().forEach(e->{
+            e.setMediaUrlList(commodityMediaService.list(new QueryWrapper<CommodityMedia>().eq("commodity_id",e.getId()))); //获取图片列表
+            e.setTypeList(typeMapper.getCommodityType(e.getId()));  //获取分类列表
+        });
         return Result.succ(selectPage);
     }
 

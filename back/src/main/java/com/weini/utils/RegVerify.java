@@ -1,6 +1,5 @@
 package com.weini.utils;
 
-import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class RegVerify {

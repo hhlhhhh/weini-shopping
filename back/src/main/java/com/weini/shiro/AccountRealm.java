@@ -9,6 +9,7 @@ import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
+import org.apache.shiro.realm.Realm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,16 +18,22 @@ import org.springframework.stereotype.Component;
 import java.util.Map;
 import java.util.Objects;
 
-@Component
-public class AccountRealm extends AuthorizingRealm{
+
+public class AccountRealm extends AuthorizingRealm {
 
     @Autowired
     AccountService accountService;
 
     @Override
+    public String getName() {
+        return "myRealm";
+    }
+
+    @Override
     public boolean supports(AuthenticationToken token) {
         return token instanceof JwtToken;
     }
+
 
     //授权器
     @Override
@@ -36,6 +43,7 @@ public class AccountRealm extends AuthorizingRealm{
         info.addRole(primaryPrincipal.getRole());
         return info;
     }
+
 
     //认证器
     @Override

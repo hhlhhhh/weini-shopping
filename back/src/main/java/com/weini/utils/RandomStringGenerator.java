@@ -1,8 +1,6 @@
 package com.weini.utils;
 
 import java.security.SecureRandom;
-import java.util.HashSet;
-import java.util.Set;
 
 public class RandomStringGenerator {
     private static final String CHARACTERS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";

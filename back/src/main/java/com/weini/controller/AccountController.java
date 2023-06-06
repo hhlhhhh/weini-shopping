@@ -1,20 +1,17 @@
 package com.weini.controller;
 
 import com.weini.POJO.Do.User;
-import com.weini.common.exception.ParameterErrorException;
 import com.weini.common.response.Result;
 import com.weini.common.response.State;
 import com.weini.service.AccountService;
-import com.weini.utils.RegVerify;
-import com.weini.utils.SendEmail;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Objects;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/account")
@@ -22,6 +19,11 @@ public class AccountController {
 
     @Autowired
     AccountService accountService;
+
+    @GetMapping("/login-fail")
+    public Result loginEvent(){
+        return Result.fail(State.LACKOFAUTHORITY,"认证失败！");
+    }
 
     @PostMapping("/login/{type}")
     public Result login(@PathVariable("type")String type,

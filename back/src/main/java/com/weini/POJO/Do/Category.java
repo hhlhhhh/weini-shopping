@@ -9,17 +9,17 @@ import java.util.Date;
 @Accessors(chain = true)
 @Data
 public class Category {
-    public String id;
-    public String name;
-    public Date createTime;
-    public Date updateTime;
+
+    private String id;
+
+    private String name;
+
     @TableField(fill = FieldFill.INSERT)
     private Date create_time;
 
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date update_time;
-    public Date delTime;
-    public String delFlag;
 
+    private String del_flag;
 
 }

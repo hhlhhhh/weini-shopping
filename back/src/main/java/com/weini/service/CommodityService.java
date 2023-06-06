@@ -5,7 +5,7 @@ import com.weini.common.response.Result;
 
 public interface CommodityService {
 
-    public Result getCommoditiesByPage(Integer page,Integer pageSize);
+    public Result getCommoditiesByPage(Integer current,Integer size);
 
     public Result getCommodityDetail(String id);
 

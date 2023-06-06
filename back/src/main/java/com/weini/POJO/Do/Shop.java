@@ -10,19 +10,24 @@ import java.util.Date;
 @Accessors(chain = true)
 @Data
 public class Shop {
-    public String id;
-    public String userId;
-    public String name;
-    public String introduce;
-    public String addressId;
-    public Date createTime;
-    public Date updateTime;
+
+    private String id;
+
+    private String user_id;
+
+    private String name;
+
+    private String image;
+
+    private String introduce;
+
+    private String address_id;
 
     @TableField(fill = FieldFill.INSERT)
     private Date create_time;
 
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date update_time;
-    public Date delTime;
-    public String delFlag;
+
+    public String del_flag;
 }

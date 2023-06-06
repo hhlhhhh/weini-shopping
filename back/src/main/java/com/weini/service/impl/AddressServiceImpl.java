@@ -1,17 +1,20 @@
 package com.weini.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.weini.POJO.Do.Address;
 import com.weini.common.exception.MissedParameterException;
 import com.weini.common.response.Result;
 import com.weini.common.response.State;
 import com.weini.mapper.AddressMapper;
 import com.weini.service.AddressService;
+import com.weini.utils.MyThreadLocal;
 import com.weini.utils.RandomId;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -52,11 +55,9 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    public Result deleteUserAddress(Address address) {
-        if(address.getId()==null){
-            throw MissedParameterException.Builder("未指定地址id！");
-        }
-        int res = addressMapper.delete(new QueryWrapper<Address>().eq("user_id", address.getUser_id()).eq("id", address.getId()));
+    public Result deleteUserAddress(String id) {
+        String userId = MyThreadLocal.getVar().getUserId();
+        int res = addressMapper.delete(new QueryWrapper<Address>().eq("user_id", userId ).eq("id", id));
         if(res==0){
             return Result.fail(State.ERROROPERATE,"删除地址失败！");
         }
@@ -79,10 +80,21 @@ public class AddressServiceImpl implements AddressService {
         if(address.getId()==null){
             throw MissedParameterException.Builder("未指定地址id！");
         }
-        addressMapper.cancelDefaultAddress(address.getUser_id());
+        String userId = MyThreadLocal.getVar().getUserId();
+        addressMapper.cancelDefaultAddress(userId);
         addressMapper.setDefaultAddress(address.getId());
 
         return Result.succ("默认地址更改成功！");
+    }
+
+    @Override
+    public Result updateAddress(Address address) {
+        String userId = MyThreadLocal.getVar().getUserId();
+        address.setUpdate_time(new Date());
+        address.setDel_flag("0");
+        address.setState("0");
+        addressMapper.update(address,new UpdateWrapper<Address>().eq("id",address.getId()).eq("user_id",userId));
+        return Result.succ("修改地址成功！");
     }
 
 

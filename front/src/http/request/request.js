@@ -26,7 +26,7 @@ function errorHandle(response) {
         case 404:
             return Promise.reject("无法访问此页面！")
         default:
-            return Promise.reject(response.msg);
+            return Promise.reject(response);
     }
 }
 // 成功处理函数
@@ -42,6 +42,10 @@ function successHandle(response) {
 // 请求拦截器
 http.interceptors.request.use(
     (config) => {
+        let token = sessionStorage.getItem('Authorization')
+        if(token){
+            config.headers.Authorization = token
+        }
         return config;
     },
     (error) => {

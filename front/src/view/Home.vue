@@ -113,12 +113,12 @@
                   <a-avatar :size="65">
                     <img
                         alt="avatar"
-                        src="https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/3ee5f13fb09879ecb5185e440cef6eb9.png~tplv-uwbnlip3yd-webp.webp"
+                        :src="userMes.avatarUrl"
                     />
                   </a-avatar>
                 </div>
                 <div class="self-nickname">
-                  Hi! <span>wn24096032</span>
+                  Hi! <span @click="router.push({name:'Profile'})">{{userMes.nickname}}</span>
                 </div>
               </div>
              <div class="shopping">
@@ -159,7 +159,7 @@
                    </span>
                    <span>我的消息</span>
                  </li>
-                 <li class="tool-item">
+                 <li class="tool-item" @click="router.push({name:'Profile'})">
                    <span>
                      <icon-user />
                    </span>
@@ -203,8 +203,13 @@ import Header from "@/components/Header.vue";
 import { IconDesktop } from '@arco-design/web-vue/es/icon';
 import {IconUser} from "@arco-design/web-vue/es/icon";
 import GoodItem from "@/components/GoodItem.vue";
-import {reactive} from "vue";
+import {reactive, ref} from "vue";
 import Footer from "@/components/Footer.vue";
+import {getCommoditiesByPage} from '@/http/commodity'
+import {getUserMesApi} from "@/http/user";
+import {useRouter} from "vue-router";
+
+const router = useRouter()
 
 const images = [
   'https://gw.alicdn.com/imgextra/i4/O1CN01a71ilU1T2RCTvUXDY_!!6000000002324-0-tps-846-472.jpg',
@@ -212,33 +217,48 @@ const images = [
   'https://img.alicdn.com/imgextra/i3/O1CN01Sf6dER1zbJ3uVQ0lE_!!6000000006732-0-tps-846-472.jpg',
   'https://img.alicdn.com/imgextra/i1/O1CN01YGUXOM1k5VKBPo5J3_!!6000000004632-2-tps-846-472.png'
 ]
-const goods = reactive([
-  {
-    'id':1,
-    'image-url':'https://img.pddpic.com/gaudit-image/2022-11-16/747e941c59877cbb1c4aa442130203d5.jpeg',
-    'desc':"Yesmoon依视明甜丧芭比半年抛2片装美瞳新款隐形眼镜大小直径女",
-    'price':24.9
-  },
-  {
-    'id':1,
-    'image-url':'https://img.pddpic.com/gaudit-image/2022-10-17/a8729b76f47207e36910e14519c5b71d.jpeg',
-    'desc':"美洲野牛新款ins韩版短款拉链多卡位钱包可爱少女心小众设计卡包",
-    'price':19.6
-  },
-  {
-    'id':1,
-    'image-url':'https://img.pddpic.com/gaudit-image/2022-10-17/b3d0a6e1947b2c245e9b6156c974eb21.jpeg',
-    'desc':"GOGO TALES戈戈舞布里克熊镜面水光玻璃唇女保湿滋润唇釉平价口红",
-    'price':16.4
-  },
-  {
-    'id':1,
-    'image-url':'https://t00img-c.yangkeduo.com/goods/images/2021-02-27/0c08e0b97016781cd83276b8e6e08b3f.jpeg',
-    'desc':"GOGO TALES戈戈舞浮雕蝴蝶结唇泥哑光唇釉不易掉色口红学生党素颜",
-    'price':21.5
-  }
-])
+const goods = reactive([])
 
+const pageObject = reactive({
+  "current": 1,
+  "size": 20
+})
+
+const userMes = ref({})
+
+
+//获取推荐列表
+const getRecommendListByPage = (page)=>{
+  getCommoditiesByPage(page).then(res=>{
+    if(res.data.code===200){
+      goods.push(...res.data.data.records)
+    }
+  })
+}
+
+//获取用户信息
+const getUserMes=()=>{
+  let str = localStorage.getItem("userMes")
+  if(str){                                  //如果localStorage没有再去服务端获取
+    userMes.value=JSON.parse(str)
+  }else{
+    getUserMesApi().then(({data})=>{
+      if(data.code===200){
+        userMes.value=data.data
+        localStorage.setItem("userMes",JSON.stringify(data.data))
+      }
+    })
+  }
+  userMes.value.avatarUrl= process.env.BASE_MEDIA + userMes.value.avatar
+}
+
+//初始化函数
+function init(){
+  getRecommendListByPage(pageObject);
+  getUserMes()
+}
+
+init()
 </script>
 
 <style scoped lang="less">
@@ -309,7 +329,7 @@ const goods = reactive([
         }
       }
       .arco-avatar-circle{
-        cursor: pointer;
+        //cursor: pointer;
       }
     }
     .shopping ul{

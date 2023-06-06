@@ -9,9 +9,10 @@ import cn.smallbun.screw.core.process.ProcessConfig;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.weini.POJO.DTO.UserDTO;
+import com.weini.POJO.Do.ShoppingCart;
 import com.weini.POJO.Do.User;
-import com.weini.common.annotation.WeiniPermissionAnnotation;
 import com.weini.common.response.State;
+import com.weini.mapper.ShoppingCartMapper;
 import com.weini.mapper.UserMapper;
 import com.weini.service.AccountService;
 import com.zaxxer.hikari.HikariConfig;
@@ -30,13 +31,16 @@ import java.util.Optional;
 class BackApplicationTests {
 
     @Resource
-    AccountService service;
+    AccountService  service;
 
     @Autowired
     Environment environment;
 
     @Resource
     UserMapper userMapper;
+
+    @Resource
+    ShoppingCartMapper shoppingCartMapper;
 
     @Test
     void contextLoads() {   //生成数据表结构关系表
@@ -145,7 +149,7 @@ class BackApplicationTests {
 
     @Test
     void test6(){
-        Object o = new User();
-        System.out.println(o.getClass());
+        ShoppingCart shoppingCartList = shoppingCartMapper.getShoppingCartList(0,2,"1");
+        System.out.println(shoppingCartList);
     }
 }

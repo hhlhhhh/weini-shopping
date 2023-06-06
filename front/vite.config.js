@@ -8,17 +8,17 @@ import { ArcoResolver } from 'unplugin-vue-components/resolvers';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-    // devServer: {
-    //     proxy: {
-    //         '/api': {
-    //             target: 'http://localhost:8090/',// 后端接口
-    //             changeOrigin: true, // 是否跨域
-    //             pathRewrite: {
-    //                 '/api': ''
-    //             }
-    //         }
-    //     }
-    // },
+    devServer: {
+        proxy: {
+            '/api': {
+                target: 'http://localhost:8090/',// 后端接口
+                changeOrigin: true, // 是否跨域
+                pathRewrite: {
+                    '/api': ''
+                }
+            }
+        }
+    },
   plugins: [
       vue(),
       AutoImport({
@@ -39,7 +39,8 @@ export default defineConfig({
   },
     define:{
       'process.env':{
-          BASE_URL:"http://localhost:8090"
+          BASE_URL:"http://localhost:8090",
+          BASE_MEDIA: "http://localhost:8090/media/",
       }
     }
 })

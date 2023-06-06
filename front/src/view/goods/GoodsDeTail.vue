@@ -18,21 +18,35 @@
                 indicator-type="dot"
                 show-arrow="hover"
             >
-              <a-carousel-item v-for="image in images">
-                <img
-                  :src="image"
-                  :style="{
-                    maxWidth: '100%',
-                    maxHeight: '100%'
+              <a-carousel-item v-for="media in goodItem['mediaUrlList']">
+                <div style="width: 100%;height:100%">
+                  <img
+                      v-if="imageReg.test(media.url)"
+                      :src="media['url']"
+                      :style="{
+                      width:'100%',
+                      height: '100%'
                   }"
-                />
+                  >
+                  <video
+                      v-else
+                      :src="media['url']"
+                      :style="{
+                      width:'100%',
+                      height: '100%'
+                  }"
+                      controls
+                      muted
+                      autoplay
+                  />
+                </div>
               </a-carousel-item>
             </a-carousel>
           </div>
         </div>
         <div class="right">
           <div class="item-name">
-            这是一本二手书，linux二手书
+            {{goodItem.name}}
           </div>
           <div class="item-detail">
             <ul>
@@ -40,7 +54,7 @@
                 <span>价格</span>
                 <span>
                   <p>￥</p>
-                  <i>27.5</i>
+                  <i>{{goodItem.price/100}}</i>
                 </span>
               </li>
               <li class="address">
@@ -49,13 +63,29 @@
               </li>
               <li>
                 <span>数量</span>
-                <a-input-number mode="button"></a-input-number>
+                <a-input-number mode="button" default-value="0" v-model="goodMes.count"></a-input-number>
+              </li>
+              <li>
+                <ul class="type-option">
+                  <li v-for="(type,index) in commodityTypeOption" :key="type.id">
+                    <span style="color: #333333;display: inline-block;width:38px">{{type.name}}</span>
+                    <span class="option">
+                      <a-radio-group type="button" v-for="option in type['typeChoiceList']" :key="option.id" v-model="choice[index]">
+                        <a-grid :cols="1" :colGap="5" :rowGap="10">
+                          <a-grid-item>
+                            <a-radio :value="option['id']">{{option['name']}}</a-radio>
+                          </a-grid-item>
+                        </a-grid>
+                      </a-radio-group>
+                    </span>
+                  </li>
+                </ul>
               </li>
             </ul>
           </div>
           <div class="operate">
             <a-button>立即购买</a-button>
-            <a-button>加入购物车</a-button>
+            <a-button @click="addToShoppingCart">加入购物车</a-button>
           </div>
         </div>
       </div>
@@ -64,60 +94,23 @@
           <div class="shop">
             <ul>
               <li class="shop-image">
-                <img src="@/assets/images/logo.png">
+                <img :src="shopMes.baseMes.image">
               </li>
               <li class="shop-name">
-                唯你购物官方旗舰店
+                {{shopMes.baseMes.name}}
               </li>
               <li class="introduce">
-                <p>
-                  这是一家店铺这是一家店铺这是一家店铺这是一家店铺这是一家店铺这是一家店铺这是一家店铺这是一家店铺这是一家店铺这是一家店铺这是一家店铺这是一家店铺这是一家店铺这是一家店铺这是一家店铺这是一家店铺这是一家店铺这是一家店铺这是一家店铺这是一家店铺这是一家店铺这是一家店铺这是一家店铺这是一家店铺这是一家店铺这是一家店铺这是一家店铺这是一家店铺这是一家店铺这是一家店铺这是一家店铺这是一家店铺这是一家店铺这是一家店铺这是一家店铺这是一家店铺这是一家店铺这是一家店铺这是一家店铺这是一家店铺这是一家店铺这是一家店铺这是一家店铺这是一家店铺这是一家店铺这是一家店铺
-                </p>
+                <p>{{shopMes.baseMes.introduce}}</p>
               </li>
               <li class="sell-list">
                 <h1>售卖榜首</h1>
                 <ul>
-                  <li>
+                  <li v-for="topItem in shopMes.selledTop" :key="topItem.id" @click="gotoDetail(topItem)">
                     <a>
                       <div class="item-content">
                         <div class="item-image">
-                          <img src="https://img.pddpic.com/gaudit-image/2022-11-16/747e941c59877cbb1c4aa442130203d5.jpeg">
-                        </div>
-                        <div class="item-desc">
-                          <div>
-                            Yesmoon依视明甜丧芭比半年抛2片装美瞳新款隐形眼镜大小直径女
-                          </div>
-                          <div class="item-price">
-                            <em>¥</em>
-                            24.9
-                          </div>
-                        </div>
-                      </div>
-                    </a>
-                  </li>
-                  <li>
-                    <a>
-                      <div class="item-content">
-                        <div class="item-image">
-                          <img src="https://img.pddpic.com/gaudit-image/2022-11-16/747e941c59877cbb1c4aa442130203d5.jpeg">
-                        </div>
-                        <div class="item-desc">
-                          <div>
-                            Yesmoon依视明甜丧芭比半年抛2片装美瞳新款隐形眼镜大小直径女
-                          </div>
-                          <div class="item-price">
-                            <em>¥</em>
-                            24.9
-                          </div>
-                        </div>
-                      </div>
-                    </a>
-                  </li>
-                  <li>
-                    <a>
-                      <div class="item-content">
-                        <div class="item-image">
-                          <img src="https://img.pddpic.com/gaudit-image/2022-11-16/747e941c59877cbb1c4aa442130203d5.jpeg">
+                          <img v-if="imageReg.test(topItem['image-url'])" :src="topItem['image-url']">
+                          <video v-else :src="topItem['image-url']" muted autoplay/>
                         </div>
                         <div class="item-desc">
                           <div>
@@ -143,9 +136,9 @@
                  描述
               </template>
               <div class="describe">
-                <span>详细描述</span>
+                <span style="display: inline-block; height: 30px;">详细描述</span>
                 <p>
-                  Yesmoon依视明甜丧芭比半年抛2片装美瞳新款隐形眼镜大小直径女Yesmoon依视明甜丧芭比半年抛2片装美瞳新款隐形眼镜大小直径女Yesmoon依视明甜丧芭比半年抛2片装美瞳新款隐形眼镜大小直径女Yesmoon依视明甜丧芭比半年抛2片装美瞳新款隐形眼镜大小直径女
+                  {{goodItem.introduce}}
                 </p>
               </div>
             </a-tab-pane>
@@ -213,19 +206,102 @@
 
 <script setup>
 import Footer from "@/components/Footer.vue";
-import {onMounted, reactive} from "vue";
+import {onMounted, reactive, ref,watch} from "vue";
+import {useRoute} from 'vue-router'
+import {getSelledTop, getShopMes} from "@/http/shop";
+import {dealMediaUrl} from "@/utils";
+import {useRouter} from "vue-router";
+import {addToShoppingCartApi} from "@/http/shoppingCart";
+import {useToast} from "primevue/usetoast";
+import {getCommodityTypeOptionApi} from "@/http/commodity";
 
+const toast = useToast()
 
-const images = [
-  'https://gw.alicdn.com/imgextra/i4/O1CN01a71ilU1T2RCTvUXDY_!!6000000002324-0-tps-846-472.jpg',
-  'https://img.alicdn.com/imgextra/i2/O1CN01XZC8Dd1IUs179sweg_!!6000000000897-2-tps-846-472.png',
-  'https://img.alicdn.com/imgextra/i3/O1CN01Sf6dER1zbJ3uVQ0lE_!!6000000006732-0-tps-846-472.jpg',
-  'https://img.alicdn.com/imgextra/i1/O1CN01YGUXOM1k5VKBPo5J3_!!6000000004632-2-tps-846-472.png'
-]
+const route = useRoute()
+const router = useRouter()
 
-onMounted(() => {
+//图片正则表达式
+const imageReg = /\.(jpg|jpeg|png|bmp|gif)$/
 
+let shopMes=reactive({
+  baseMes:{},
+  selledTop:[]
 })
+
+let goodItem = ref({})
+let goodMes = reactive({
+  "address_id": "",
+  "count": 0,
+  "typeOption":[]
+})
+
+const commodityTypeOption = ref([])
+const choice = reactive([])
+
+
+const getCommodityTypeOption = ()=>{
+  getCommodityTypeOptionApi({id:goodItem.value.id}).then(({data})=>{
+    if(data.code===200){
+      commodityTypeOption.value = data.data
+    }
+  })
+}
+
+const addToShoppingCart = ()=>{
+  for (let i = 0; i < commodityTypeOption.value.length; i++) {
+    if(!choice[i]){
+      toast.add({ severity: 'error', summary: "错误", detail: '请正确选择配置参数！', life: 1500 })
+      return
+    }
+  }
+  if(goodMes.count===0){
+    toast.add({ severity: 'error', summary: "错误", detail: `商品数量不能为${goodMes.count}！`, life: 1500 })
+    return
+  }
+  const types = []
+  commodityTypeOption.value.forEach(e=>{
+    types.push(e.id)
+  })
+  addToShoppingCartApi([{commodity_id:goodItem.value.id,count:goodMes.count,types,choices:choice}]).then(({data})=>{
+    if(data.code===200){
+      toast.add({ severity: 'success', summary: "操作成功！", detail: "添加商品成功！", life: 1500 })
+      router.push({name:"ShoppingCart"})
+    }
+  })
+}
+
+//点击售卖榜单的每个单子
+const gotoDetail = (item)=>{
+  router.push({
+    name: "GoodDetail",
+    query:{
+      goodItem:JSON.stringify(item)
+    }
+  })
+}
+
+onMounted(()=>{
+  goodItem.value = JSON.parse(route.query.goodItem)
+  getShopMes({"id":goodItem.value['shop_id']}).then(({data})=>{
+    shopMes.baseMes=data.data
+    shopMes.baseMes.image=process.env.BASE_MEDIA+shopMes.baseMes.image
+  })
+  getSelledTop({id:goodItem.value['shop_id'],n:3}).then(({data})=>{
+    shopMes.selledTop=data.data
+    shopMes.selledTop.forEach(e=>{
+      dealMediaUrl(e)
+    })
+  })
+  getCommodityTypeOption()
+})
+
+//跳转到同一个 页面页面不刷新问题
+watch(()=>route.query,(to,from)=>{
+    if (to.name === from.name) {
+      location.reload()
+    }
+})
+
 
 </script>
 
@@ -310,6 +386,20 @@ onMounted(() => {
               color: #3c3c3c;
               font-family: tahoma, arial, 'Hiragino Sans GB', '\5b8b\4f53', sans-serif;
             }
+            .type-option{
+              display: block;
+              >li{
+                font-size: 14px;
+                color: #3c3c3c;
+                padding-left: 0;
+                .option{
+                  :deep(.arco-radio-button){
+                    display: inline-block;
+                    background-color: rgba(242, 243, 245);
+                  }
+                }
+              }
+            }
           }
           .operate{
             margin-top: 30px;
@@ -385,8 +475,9 @@ onMounted(() => {
           .item-image{
             display:inline-block;
             width: 80px;
-            img{
+            video,img{
               width: 80px;
+              height: 100%;
             }
           }
           .item-desc{

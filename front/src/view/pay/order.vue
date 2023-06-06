@@ -5,15 +5,10 @@
       <div class="confirm-address">
         <header>确认收货地址</header>
         <div class="address-list">
-          <a-radio-group direction="vertical">
+          <a-radio-group direction="vertical" v-model="orderMes.address_id">
             <ul>
-              <li>
-                <a-radio value="A">四川省 自贡市 牛马区 牛马镇 乐乐快哒 （何牛牛 收） 15445636998</a-radio>
-                <a>修改本地址</a>
-              </li>
-              <li>
-                <a-radio value="B">四川省 自贡市 牛马区 牛马镇 乐乐快哒 （何牛牛 收） 15445636998</a-radio>
-                <a>修改本地址</a>
+              <li v-for="address in addressData">
+                <a-radio :value="address.id">{{address.province}}  {{address.city}}  {{ address.town }} &nbsp;&nbsp;&nbsp; {{address.detail}} &nbsp;&nbsp;&nbsp; （{{address.nickname}} 收）&nbsp;&nbsp;&nbsp; {{address.phone}}</a-radio>
               </li>
             </ul>
           </a-radio-group>
@@ -101,10 +96,43 @@
 
 import Footer from "@/components/Footer.vue";
 import PayHeader from "@/view/pay/components/PayHeader.vue";
+import {getAddressListApi} from "@/http/address";
+import {onMounted, reactive} from "vue";
+
+
+const addressData = reactive([])
+
+const orderMes = reactive({
+  address_id:"",
+  commodityList:[]
+})
+
+const getAddressList = ()=>{
+  getAddressListApi().then(({data})=>{
+    if(data.code === 200){
+      addressData.length=0
+      data.data.forEach(e=>{
+        addressData.push(e)
+      })
+    }
+  })
+}
+
+onMounted(()=>{
+  getAddressList()
+  let mesStr = localStorage.getItem("order-commodityList")
+  if(mesStr){
+    orderMes.commodityList = JSON.parse(mesStr) //获取订单的商品信息
+  }
+})
+
 </script>
 
 <style scoped lang="less">
 .order{
+  :deep(.arco-radio-label){
+    color:var(--color-text-3)
+  }
   >.content{
     width: 1200px;
     margin: 0 auto;

@@ -21,7 +21,7 @@
             <div class="left-header">
               <div >
                 购物车（全部
-                <span>2</span>
+                <span>{{shoppingCartMes.count}}</span>
                 ）
               </div>
             </div>
@@ -58,119 +58,56 @@
                 操作
               </div>
             </div>
-            <div class="shopping-cart-item">
-              <div class="item-header">
-                <div class="item-checkbox">
-                  <input type="checkbox">
-                </div>
-                <div class="item-shop">
-                  店铺：
-                  <span>
-                  唐晓文艺店
-                </span>
-                </div>
-              </div>
-              <div class="item-box">
-                <ul>
-                  <li>
+            <div class="shopping-cart-item" v-for="cartItem in commoditiesTmp" :key="cartItem.id">
+              <template v-if="cartItem">
+                <div class="item-header">
+                  <div class="item-checkbox">
                     <input type="checkbox">
-                  </li>
-                  <li>
-                    <img class="item-image" src="https://img11.360buyimg.com/jdcms/s300x300_jfs/t1/1831/1/19778/132503/63842db6E811848c4/83b8de2b8679eddc.jpg.avif">
-                  </li>
-                  <li>
-                    儿童鞋子儿童鞋子儿童鞋子儿童鞋子儿童鞋子儿童鞋子儿童鞋子儿童鞋子儿童鞋子
-                  </li>
-                  <li>
-                    <ul class="goods-item-category">
-                      <li>
-                        <span>尺寸：</span>
-                        <span>2*2*2cm</span>
-                      </li>
-                      <li>
-                        <span>颜色分类：</span>
-                        <span>黑色黑色黑色黑色黑色黑色黑色黑色黑色</span>
-                      </li>
-                      <li>
-                        <span>几人座：</span>
-                        <span>单人</span>
-                      </li>
-                    </ul>
-                  </li>
-                  <li>
-                    <span class="original-price">￥123.00</span>
-                    <span class="seckill-price">￥99.00</span>
-                  </li>
-                  <li>
-                    <a-input-number :model-value="testNumberInput" :style="{width:'80px'}" :min="0" :max="100" mode="button" size="mini" class="item-count" />
-                  </li>
-                  <li>
-                    <span>￥</span>
-                    <span>155.30</span>
-                  </li>
-                  <li>
-                    <a>移入收藏夹</a>
-                    <a>删除</a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div class="shopping-cart-item">
-              <div class="item-header">
-                <div class="item-checkbox">
-                  <input type="checkbox">
-                </div>
-                <div class="item-shop">
-                  店铺：
-                  <span>
-                  唐晓文艺店
+                  </div>
+                  <div class="item-shop">
+                    店铺：
+                    <span>
+                  {{cartItem['shop_mes']['name']}}
                 </span>
+                  </div>
                 </div>
-              </div>
-              <div class="item-box">
-                <ul>
-                  <li>
-                    <input type="checkbox">
-                  </li>
-                  <li>
-                    <img class="item-image" src="https://img11.360buyimg.com/jdcms/s300x300_jfs/t1/1831/1/19778/132503/63842db6E811848c4/83b8de2b8679eddc.jpg.avif">
-                  </li>
-                  <li>
-                    儿童鞋子儿童鞋子儿童鞋子儿童鞋子儿童鞋子儿童鞋子儿童鞋子儿童鞋子儿童鞋子
-                  </li>
-                  <li>
-                    <ul class="goods-item-category">
-                      <li>
-                        <span>尺寸：</span>
-                        <span>2*2*2cm</span>
-                      </li>
-                      <li>
-                        <span>颜色分类：</span>
-                        <span>黑色黑色黑色黑色黑色黑色黑色黑色黑色</span>
-                      </li>
-                      <li>
-                        <span>几人座：</span>
-                        <span>单人</span>
-                      </li>
-                    </ul>
-                  </li>
-                  <li>
-                    <span class="original-price">￥123.00</span>
-                    <span class="seckill-price">￥99.00</span>
-                  </li>
-                  <li>
-                    <a-input-number :model-value="testNumberInput" :style="{width:'80px'}" :min="0" :max="100" mode="button" size="mini" class="item-count" />
-                  </li>
-                  <li>
-                    <span>￥</span>
-                    <span>155.30</span>
-                  </li>
-                  <li>
-                    <a>移入收藏夹</a>
-                    <a>删除</a>
-                  </li>
-                </ul>
-              </div>
+                <div class="item-box" v-for="item in cartItem['commodity']">
+                  <ul>
+                    <li>
+                      <input type="checkbox">
+                    </li>
+                    <li>
+                      <img v-if="item['media-type']==='image'" class="item-image" :src="item['image-url']">
+                      <video v-else class="item-image" :src="item['image-url']" muted autoplay/>
+                    </li>
+                    <li>
+                      {{item.name}}
+                    </li>
+                    <li>
+                      <ul class="goods-item-category">
+                        <li v-for="(typeItem) in cartItem['type']" :key="typeItem.id">
+                          <span>{{typeItem['typeName']}}</span>：
+                          <span>{{typeItem['typeChoiceName']}}</span>
+                        </li>
+                      </ul>
+                    </li>
+                    <li>
+                      <span class="seckill-price">￥{{item['price']}}</span>
+                    </li>
+                    <li>
+                      <a-input-number :model-value="testNumberInput" :style="{width:'80px'}" :min="0" :max="100" mode="button" size="mini" class="item-count" />
+                    </li>
+                    <li>
+                      <span>￥</span>
+                      <span>{{item['price']*cartItem['count']}}</span>
+                    </li>
+                    <li>
+                      <a>移入收藏夹</a>
+                      <a>删除</a>
+                    </li>
+                  </ul>
+                </div>
+              </template>
             </div>
           </div>
           <div class="tail">
@@ -215,11 +152,91 @@
 
 <script setup>
 import Footer from "@/components/Footer.vue";
-import {ref, getCurrentInstance} from 'vue'
+import {ref, getCurrentInstance, onMounted, reactive, onBeforeMount, toRefs, triggerRef, toRef, watch} from 'vue'
+import {getCommodityTypeChoiceApi, getShoppingCartList} from "@/http/shoppingCart";
+import {getShopMes} from "@/http/shop";
+import {dealMediaUrl} from "@/utils";
 
 const instance = getCurrentInstance();
 
 let testNumberInput = ref(0)
+let userMes = ref({})
+
+const treeData = ref([
+  {
+    title: '',
+    key: '0',
+    children: [
+
+      ]
+  }
+])
+
+const shoppingCartMes = ref({
+  commodities:[{"shop_mes":{},"commodity":{}}]
+})
+
+const commoditiesTmp = ref([])
+
+//获取购物车数据
+const getAllShoppingCartItem = ()=>{
+   getShoppingCartList({current: 1 ,size: 100}).then(({data})=>{
+    if(data.code === 200){
+      shoppingCartMes.value = data.data
+      shoppingCartMes.value.commodities.forEach(async (e)=>{
+        await getShopMes({id:e['commodity']['shop_id']}).then(({data})=>{
+          e['shop_mes'] = data.data
+        })
+        getCommodityTypeChoiceApi({"id":e['id']}).then(({data})=>{
+          let arr = []
+          data.data.forEach((e,index)=>{
+            if(index<3){
+              arr.push({
+                "id":e.id,
+                "typeName":e.type.name,
+                "typeChoiceName":e.typeChoice.name
+              })
+            }
+          })
+          e['type']=arr
+        })
+        dealMediaUrl(e['commodity'])
+
+        let i = 0
+        for (; i < commoditiesTmp.value.length; i++) {   //合并同类店铺
+          if(commoditiesTmp.value[i]['commodity']['0']['shop_id']===e['commodity']['shop_id']){
+            commoditiesTmp.value[i]['commodity'].push(e['commodity'])
+            break
+          }
+        }
+        if(i===commoditiesTmp.value.length) {
+          commoditiesTmp.value.push({
+            ...e,
+            commodity: [e.commodity]
+          })
+        }
+      })
+    }
+  })
+
+  treeData.value.children = commoditiesTmp;
+
+  console.log(treeData)
+}
+
+watch(()=>treeData,(newValue,oldValue)=>{
+  console.log(newValue.value)
+  console.log(66)
+},{deep:true,immediate:true})
+
+onMounted( ()=>{
+  //获取用户信息
+  let userMesStr = localStorage.getItem("userMes")
+  userMes.value = JSON.parse(userMesStr)
+
+  getAllShoppingCartItem()
+
+})
 
 
 </script>
@@ -228,8 +245,13 @@ let testNumberInput = ref(0)
 .shopping-cart-content{
   width: 100%;
   overflow-x: hidden;
-  //overflow-y: hidden;
-
+  :deep(.arco-tree-node-switcher){
+    display: none;
+  }
+  :deep(.arco-checkbox-icon){
+    width: 18px;
+    height: 18px;
+  }
   .top-bar{
     position: fixed;
     display: flex;
@@ -292,6 +314,9 @@ let testNumberInput = ref(0)
         display: flex;
         align-items: center;
         justify-content: flex-start;
+        color: #333333;
+        width: 1000px;
+        padding-right: 20px;
         .check-all{
           display: table;
           border-collapse: collapse;
@@ -315,10 +340,10 @@ let testNumberInput = ref(0)
           flex: 1;
         }
         >div:nth-child(1){
-          flex: 1.5;
+          flex: 1;
         }
         >div:nth-child(2){
-          flex: 5;
+          flex: 3.5;
         }
         >div:nth-child(3){
           flex: 1.5;
@@ -375,7 +400,7 @@ let testNumberInput = ref(0)
             > li:nth-child(2) {
               margin-right: 10px;
 
-              img {
+              video,img {
                 width: 80px;
                 border-radius: 4px;
               }

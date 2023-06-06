@@ -1,11 +1,12 @@
 <template>
   <div class="item-content">
     <div class="item-image">
-      <img :src="goodItem['image-url']">
+      <img v-if="goodItem['media-type']=='image'" :src="goodItem['image-url']">
+      <video v-else :src="goodItem['image-url']" autoplay controls/>
     </div>
     <div class="item-desc">
-      <div>
-        {{goodItem.desc}}
+      <div class="introduce" @click="gotoDetail">
+        {{goodItem.introduce}}
       </div>
       <div class="item-price">
         <em>¥</em>
@@ -16,10 +17,25 @@
 </template>
 
 <script setup>
+
+import {useRouter} from "vue-router";
+import {dealMediaUrl} from "@/utils";
+
+const router = useRouter();
+
 let {goodItem} = defineProps(['goodItem'])
 
+const gotoDetail = ()=>{
+  router.push({
+    name: "GoodDetail",
+    query:{
+      goodItem:JSON.stringify(goodItem)
+    }
+  })
+}
+
 function init(){
-  // console.log(goodItem)
+  dealMediaUrl(goodItem)
 }
 
 init()
@@ -32,10 +48,10 @@ init()
   display: inline-flex;
   width: calc((100% - 24px) / 3);
   height: 172px;
+  overflow: hidden;
   background-color: #f7f9fa;
   min-width: calc((100% - 24px) / 3);
   max-width: calc((100% - 24px) / 3);
-  cursor: pointer;
   padding: 11px;
   margin: 0 12px 15px 0;
   border: 1px solid #f7f9fa;
@@ -46,7 +62,7 @@ init()
   .item-image{
     display:inline-block;
     width: 150px;
-    img{
+    video,img{
       width: 150px;
     }
   }
@@ -65,6 +81,9 @@ init()
       display: -webkit-box;
       -webkit-line-clamp: 4;
       -webkit-box-orient: vertical;
+    }
+    .introduce{
+      cursor: pointer;
     }
     :hover{
       color: #FF5000;

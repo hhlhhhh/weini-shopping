@@ -36,7 +36,7 @@
             <a-button class="get-email-code-btn">获取验证码</a-button>
           </li>
           <li>
-            <a class="to-login">立即登录</a>
+            <a class="to-login" @click="router.push({name:'Login'})">立即登录</a>
           </li>
           <li>
             <a-button class="register-btn">注册</a-button>
@@ -48,6 +48,11 @@
 </template>
 
 <script setup>
+
+import {useRouter} from "vue-router";
+
+const router = useRouter()
+
 
 </script>
 

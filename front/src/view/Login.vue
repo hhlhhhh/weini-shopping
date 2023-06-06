@@ -5,7 +5,7 @@
        <img src="@/assets/images/login/login-image-01.png">
      </div>
      <div class="box2">
-       <a-tabs default-active-key="2">
+       <a-tabs default-active-key="1" @change="tabChange">
          <a-tab-pane key="1" title="密码登录">
            <div class="login-by-password">
              <ul>
@@ -27,10 +27,10 @@
                  <a>忘记密码?</a>
                </li>
                <li>
-                 <button class="login-btn">登录</button>
+                 <button class="login-btn" @click="loginEvent">登录</button>
                </li>
                <li>
-                 <a class="to-register">立即注册</a>
+                 <a class="to-register" @click="router.push({name:'Register'})" >立即注册</a>
                </li>
              </ul>
            </div>
@@ -57,7 +57,7 @@
                  <button class="login-btn" :disabled="EmailLoginWait" @click="loginEvent">登录</button>
                </li>
                <li>
-                 <a class="to-register">立即注册</a>
+                 <a class="to-register" @click="router.push({name:'Register'})">立即注册</a>
                </li>
              </ul>
            </div>
@@ -70,8 +70,9 @@
 
 <script setup>
 import {ref,reactive,getCurrentInstance} from "vue";
-import {useRoute} from "vue-router";
-import {getEmailCodeApi,loginByEmailApi} from "@/http/user";
+import {useRoute, useRouter} from "vue-router";
+import {getEmailCodeApi, loginByEmailApi, loginByPasswordApi} from "@/http/user";
+import http from "@/http/request/request";
 import {useToast} from "primevue/usetoast";
 const toast = useToast()
 
@@ -79,10 +80,11 @@ const {proxy} = getCurrentInstance()
 
 //页面路由
 const route = useRoute()
+const router = useRouter()
 
 //true为手机密码登录
 //false为邮箱验证码登录
-let loginType = ref(false)
+let loginType = ref(true)
 
 let getEmailCodeWaitTime=ref(0);  //获取验证码等待时间
 let EmailLoginWait = ref(false)  //邮箱登录等待
@@ -93,6 +95,10 @@ let form  = reactive({
   email:"",
   authCode:null
 })
+
+const tabChange = ()=>{
+  loginType.value=!loginType.value
+}
 
 //邮箱验证格式
 let emailVerify = /^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/
@@ -128,7 +134,39 @@ const getEmailCode = ()=>{
 
 //手机密码登录
 function loginByPassword(){
-  console.log(loginType.value)
+  let reg = /^(13\d|14[579]|15[012356789]|166|17[0135678]|18\d|19[89])\d{8}$/
+  if(!reg.test(form.phone)){  //手机号格式验证
+    return new Promise((resolve, reject)=>{
+      reject({
+        "code": 105,
+        "msg": "手机号格式错误！"
+      })
+    })
+  }
+  reg = /^(?=.*[0-9])(?=.*[a-zA-Z])[0-9a-zA-Z]{6,16}$/
+  if(!reg.test(form.password)){
+    return new Promise((resolve, reject)=>{
+      reject({
+        "code": 106,
+        "msg": "密码格式错误！"
+      })
+    })
+  }
+  EmailLoginWait.value = true
+  try {
+    return loginByPasswordApi({
+      "arg1": form.phone,
+      "arg2": form.password
+    })
+  }catch (e) {
+    EmailLoginWait.value = false
+    return new Promise((resolve, reject)=>{
+      reject({
+        code: "460",
+        msg: e.msg
+      })
+    })
+  }
 }
 
 //邮箱登录
@@ -151,8 +189,6 @@ function loginByEmail(){
   }
   EmailLoginWait.value = true
   try {
-    let a = []
-    a[5]=6
     return loginByEmailApi({
       "arg1": form.email,
       "arg2": form.authCode
@@ -171,13 +207,16 @@ function loginByEmail(){
 //登录
 const loginEvent = ()=>{
   const req = loginType.value?loginByPassword:loginByEmail;
-
   req().then((res)=>{
-
-  },(err)=>{
-    if(err.code===460){
-      toast.add({severity: 'error', summary: err.msg , life: 1500})
+    if(res.data.code===200){
+      sessionStorage.setItem('Authorization',res.headers['authorization'])
+      toast.add({severity: 'success', summary: res.data.data , life: 1500})
+      router.push({name:"Home"})
+    }else {
+      toast.add({severity: 'error', summary: res.data.msg , life: 1500})
     }
+  },(err)=>{
+    toast.add({severity: 'error', summary: err.msg , life: 1500})
   })
 }
 

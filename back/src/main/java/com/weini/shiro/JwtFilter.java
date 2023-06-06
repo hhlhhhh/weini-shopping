@@ -4,9 +4,11 @@ package com.weini.shiro;
 import com.auth0.jwt.interfaces.Claim;
 import com.weini.common.response.Result;
 import com.weini.utils.JwtFactory;
+import com.weini.utils.MyThreadLocal;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.ExpiredCredentialsException;
+import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.AuthenticatingFilter;
 import org.apache.shiro.web.util.WebUtils;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -21,11 +23,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
-@Component
+
 public class JwtFilter extends AuthenticatingFilter {
 
     @Resource
     RedisTemplate<Object,Object> template;
+
 
     protected AuthenticationToken createToken(ServletRequest servletRequest, ServletResponse servletResponse) throws Exception {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
@@ -39,23 +42,24 @@ public class JwtFilter extends AuthenticatingFilter {
     protected boolean onAccessDenied(ServletRequest servletRequest, ServletResponse servletResponse) throws Exception {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         String jwt =request.getHeader("Authorization");
+        Subject subject = getSubject(servletRequest, servletResponse);
         try{
             if(StringUtils.isEmpty(jwt)){
-                return true;
+                return false;
             }else{
                 if(!JwtFactory.verify(jwt)){
                     throw new ExpiredCredentialsException("token已失效，请重新登录");
                 }
-
                 Map<String, Claim> mes = JwtFactory.getMes(jwt);
                 String id = mes.get("id").asString();
                 String redisJwt = (String)template.opsForValue().get(id + "-jwt");
                 if("".equals(redisJwt) || !jwt.equals(redisJwt)){
                     throw new ExpiredCredentialsException("登录已退出，请重新登录");
                 }
+                MyThreadLocal.setVar(MyThreadLocal.getVar().setUserId(id));   //  将用户id放到本地线程中
             }
         }catch (ExpiredCredentialsException e){
-            return true;
+            return false;
         }
         //执行登录
         return executeLogin(servletRequest,servletResponse);
