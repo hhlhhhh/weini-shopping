@@ -92,7 +92,7 @@ public class AddressServiceImpl implements AddressService {
         String userId = MyThreadLocal.getVar().getUserId();
         address.setUpdate_time(new Date());
         address.setDel_flag("0");
-        address.setState("0");
+        address.setState(null);
         addressMapper.update(address,new UpdateWrapper<Address>().eq("id",address.getId()).eq("user_id",userId));
         return Result.succ("修改地址成功！");
     }

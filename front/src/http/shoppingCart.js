@@ -18,3 +18,15 @@ export const addToShoppingCartApi = (data) => http.post("/shopping-cart/add",dat
         'Content-Type': 'application/json',
     }
 })
+
+
+export const removeFromShoppingCartApi = (data) => http.request({
+    url: "/shopping-cart/remove",
+    method: "DELETE",
+    params:data,
+    headers: {
+        'Content-Type': 'application/json',
+    }
+})
+
+

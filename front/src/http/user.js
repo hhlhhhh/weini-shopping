@@ -4,7 +4,6 @@ export const loginByEmailApi = (data)=>http.request({
     url: "/account/login/email",
     method: "POST",
     data,
-    
 })
 
 export const getEmailCodeApi = (data)=>http.request({
@@ -28,5 +27,14 @@ export const getUserMesApi = ()=>http.request({
 export const updateUserMesApi = (data)=>http.put("/user/update",JSON.stringify(data),{
     headers: {
         'Content-Type': 'application/json',
+    }
+})
+
+export const registerApi = (data)=>http.request({
+    url: "/account/register?code="+data.code,
+    method: "POST",
+    data,
+    headers:{
+        'Content-Type': 'application/json'
     }
 })

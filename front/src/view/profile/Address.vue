@@ -79,6 +79,7 @@ const toast = useToast()
 
 const selectedOptions = ref([])
 const addressForm = reactive({
+  id:"",
   update:false,
   province:"",
   city:"",
@@ -122,6 +123,17 @@ const getAddress = (selectValue)=>{
   console.log(selectValue)
 }
 
+function clearForm(){
+  addressForm.id=""
+  addressForm.state=false
+  addressForm.province=""
+  addressForm.city=""
+  addressForm.town=""
+  addressForm.detail=""
+  addressForm.nickname=""
+  addressForm.phone=""
+}``
+
 const addAddress = ()=>{
   let reg = /^[\s\S]{1,50}$/
   if(!reg.test(addressForm.detail)){
@@ -156,6 +168,7 @@ const addAddress = ()=>{
     if(data.code===200){
       toast.add({severity: 'success', summary: data.data , life: 1500})
       getAddressList()
+      clearForm()
     }
   })
 }
@@ -170,14 +183,22 @@ const updateAddress = (event,record)=>{
   selectedOptions.value[0]=record.province
   selectedOptions.value[1]=record.city
   selectedOptions.value[2]=record.town
+  addressForm.id=record.id
 }
 
 
 const saveEvent = ()=>{
   if (addressForm.update){
+    addressForm.province=selectedOptions.value[0]
+    addressForm.city=selectedOptions.value[1]
+    addressForm.town=selectedOptions.value[2]
+    addressForm.state=addressForm.state?"1":"0"
+
     updateAddressApi(addressForm).then(({data})=>{
       if(data.code===200){
         toast.add({severity: 'success', summary: data.data , life: 1500})
+        getAddressList()
+        clearForm()
       }
     })
   }else addAddress()

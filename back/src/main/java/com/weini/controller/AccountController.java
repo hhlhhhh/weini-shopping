@@ -48,7 +48,7 @@ public class AccountController {
     }
 
     @PostMapping("/register")
-    public Result register(@RequestBody User user,@RequestParam String code, HttpServletRequest req,HttpServletResponse rep){
+    public Result register(@RequestParam("code") String code, @RequestBody User user,HttpServletRequest req,HttpServletResponse rep){
         return accountService.register(user,code,req,rep);
     }
 }

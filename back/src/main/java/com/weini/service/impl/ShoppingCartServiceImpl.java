@@ -45,8 +45,9 @@ public class ShoppingCartServiceImpl extends ServiceImpl<ShoppingCartMapper, Sho
     public Result getShoppingCartCommoditiesList(Integer current,Integer size) {
         String userId = MyThreadLocal.getVar().getUserId();
         ShoppingCart cart = shoppingCartMapper.selectOne(new QueryWrapper<ShoppingCart>().eq("user_id", userId));
+        if(cart == null)return Result.succ(new Object[0]);
         ShoppingCart shoppingCart = shoppingCartMapper.getShoppingCartList(current-1,size,cart.getId());
-
+        if(shoppingCart==null)return Result.succ(new Object[0]);
         for (ShoppingCartCommodity commodity : shoppingCart.getCommodities()) {
             commodity.setCommodity(commodityMapper.selectById(commodity.getCommodity_id()));
             commodity.getCommodity().setMediaUrlList(commodityMediaService.list(new QueryWrapper<CommodityMedia>().eq("commodity_id",commodity.getCommodity_id())));
@@ -84,7 +85,8 @@ public class ShoppingCartServiceImpl extends ServiceImpl<ShoppingCartMapper, Sho
     }
 
     @Override
-    public Result removeCommoditiesFromShoppingCart(List<String> list,String id) {
+    public Result removeCommoditiesFromShoppingCart(List<String> list) {
+        String id = MyThreadLocal.getVar().getUserId();
         ShoppingCart shoppingCart = shoppingCartMapper.selectOne(new QueryWrapper<ShoppingCart>().eq("user_id", id).select("id"));
         list.forEach(e->{
             shoppingCartMapper.removeCommoditiesFromShoppingCart(shoppingCart.getId(),e);

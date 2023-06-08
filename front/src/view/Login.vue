@@ -122,7 +122,7 @@ const getEmailCode = ()=>{
     getEmailCodeWaitTime.value-=1;
   },1000)
 
-  getEmailCodeApi({email:form.email}).then(res=>{
+  getEmailCodeApi({email:form.email,type:"login"}).then(res=>{
     if(res.data.code===200) {
       toast.add({severity: 'success', summary: '发送给' + form.email + "!", detail: '发送成功！', life: 3000})
     }else{
@@ -210,6 +210,7 @@ const loginEvent = ()=>{
   req().then((res)=>{
     if(res.data.code===200){
       sessionStorage.setItem('Authorization',res.headers['authorization'])
+      localStorage.removeItem("userMes")
       toast.add({severity: 'success', summary: res.data.data , life: 1500})
       router.push({name:"Home"})
     }else {

@@ -98,7 +98,9 @@ import Footer from "@/components/Footer.vue";
 import PayHeader from "@/view/pay/components/PayHeader.vue";
 import {getAddressListApi} from "@/http/address";
 import {onMounted, reactive} from "vue";
+import {useRoute} from "vue-router";
 
+const route = useRoute()
 
 const addressData = reactive([])
 
@@ -120,6 +122,9 @@ const getAddressList = ()=>{
 
 onMounted(()=>{
   getAddressList()
+
+  console.log(route.query.data);
+
   let mesStr = localStorage.getItem("order-commodityList")
   if(mesStr){
     orderMes.commodityList = JSON.parse(mesStr) //获取订单的商品信息

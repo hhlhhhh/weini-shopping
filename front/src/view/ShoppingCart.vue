@@ -16,7 +16,7 @@
         </div>
       </a-layout-header>
       <a-layout-content>
-        <div class="shopping-cart">
+        <div class="shopping-cart" v-if="shoppingCartMes['commodities'][0]['commodity'].length!==0">
           <div class="header">
             <div class="left-header">
               <div >
@@ -27,11 +27,11 @@
             </div>
             <div class="right-header">
               <div class="total-money">
-                已选商品
-                <span class="money">0.00</span>
+                合计：
+                <span class="money">￥ {{totalMoney}}</span>
               </div>
               <div class="settleAccounts-btn">
-                <a-button type="primary" shape="round">结算</a-button>
+                <a-button type="primary" shape="round" @click="gotoOrder">结算</a-button>
               </div>
             </div>
           </div>
@@ -39,7 +39,7 @@
           <div class="body">
             <div class="table-title">
               <div class="check-all">
-                <input id="check-all-goods1" type="checkbox">
+                <input id="check-all-goods1" type="checkbox" @change="selectAll(allChecked)" v-model="allChecked">
                 <label for="check-all-goods1">全选</label>
               </div>
               <div>
@@ -58,11 +58,11 @@
                 操作
               </div>
             </div>
-            <div class="shopping-cart-item" v-for="cartItem in commoditiesTmp" :key="cartItem.id">
+            <div class="shopping-cart-item" v-for="(cartItem,shopIndex) in shoppingCartMes.commodities" :key="cartItem.id">
               <template v-if="cartItem">
                 <div class="item-header">
                   <div class="item-checkbox">
-                    <input type="checkbox">
+                    <input type="checkbox" v-model="commodityChecked[shopIndex]['flag']" @change="selectShop(commodityChecked[shopIndex]['flag'],shopIndex)">
                   </div>
                   <div class="item-shop">
                     店铺：
@@ -71,10 +71,10 @@
                 </span>
                   </div>
                 </div>
-                <div class="item-box" v-for="item in cartItem['commodity']">
+                <div class="item-box" v-for="(item,commodityIndex) in cartItem['commodity']">
                   <ul>
                     <li>
-                      <input type="checkbox">
+                      <input type="checkbox" v-model="commodityChecked[shopIndex]['children'][commodityIndex].flag" @change="selectCommodity(commodityChecked[shopIndex]['children'][commodityIndex].flag,shopIndex)">
                     </li>
                     <li>
                       <img v-if="item['media-type']==='image'" class="item-image" :src="item['image-url']">
@@ -85,9 +85,9 @@
                     </li>
                     <li>
                       <ul class="goods-item-category">
-                        <li v-for="(typeItem) in cartItem['type']" :key="typeItem.id">
-                          <span>{{typeItem['typeName']}}</span>：
-                          <span>{{typeItem['typeChoiceName']}}</span>
+                        <li v-for="(typeItem) in item['type']" :key="typeItem.id">
+                          <span>{{typeItem['type']['name']}}</span>：
+                          <span>{{typeItem['typeChoice']['name']}}</span>
                         </li>
                       </ul>
                     </li>
@@ -95,15 +95,15 @@
                       <span class="seckill-price">￥{{item['price']}}</span>
                     </li>
                     <li>
-                      <a-input-number :model-value="testNumberInput" :style="{width:'80px'}" :min="0" :max="100" mode="button" size="mini" class="item-count" />
+                      <a-input-number v-model="commodityChecked[shopIndex]['children'][commodityIndex].value" :style="{width:'80px'}" :min="0" :max="100" mode="button" size="mini" class="item-count" />
                     </li>
                     <li>
                       <span>￥</span>
-                      <span>{{item['price']*cartItem['count']}}</span>
+                      <span>{{item['price']*commodityChecked[shopIndex]["children"][commodityIndex]['value']}}</span>
                     </li>
                     <li>
                       <a>移入收藏夹</a>
-                      <a>删除</a>
+                      <a @click="removeFromShoppingCart(item['shoppingCart_id'])">删除</a>
                     </li>
                   </ul>
                 </div>
@@ -114,33 +114,36 @@
             <ul>
               <li>
                 <div class="check-all">
-                  <input id="check-all-goods2" type="checkbox">
+                  <input id="check-all-goods2" type="checkbox" @change="selectAll(allChecked)" v-model="allChecked">
                   <label for="check-all-goods2">全选</label>
                 </div>
               </li>
               <li>
-                <a class="del-goods">删除</a>
+                <a class="del-goods" @click="removeFromShoppingCart([])">删除</a>
                 <a class="move-collect">移入收藏夹</a>
               </li>
               <li>
                 已选商品
-                <span class="item-count">2</span>
+                <span class="item-count">{{commodityCheckedMes.length}}</span>
                 件
               </li>
               <li>
                 <span>合计：</span>
                 <span class="item-total">
                   ￥
-                  <span class="item-total-money">374.30</span>
+                  <span class="item-total-money">{{totalMoney}}</span>
                 </span>
               </li>
               <li>
                 <div class="item-settle">
-                  <a-button type="primary" shape="round">结算</a-button>
+                  <a-button type="primary" shape="round" @click="gotoOrder">结算</a-button>
                 </div>
               </li>
             </ul>
           </div>
+        </div>
+        <div v-else style="height:150px;margin-top: 50px">
+          <a-empty />
         </div>
       </a-layout-content>
       <a-layout-footer>
@@ -152,84 +155,205 @@
 
 <script setup>
 import Footer from "@/components/Footer.vue";
-import {ref, getCurrentInstance, onMounted, reactive, onBeforeMount, toRefs, triggerRef, toRef, watch} from 'vue'
-import {getCommodityTypeChoiceApi, getShoppingCartList} from "@/http/shoppingCart";
+import {
+  ref,
+  onMounted,
+  reactive,
+  watch,
+  computed
+} from 'vue'
+import {getCommodityTypeChoiceApi, getShoppingCartList, removeFromShoppingCartApi} from "@/http/shoppingCart";
 import {getShopMes} from "@/http/shop";
 import {dealMediaUrl} from "@/utils";
+import {useToast} from "primevue/usetoast";
+import {useRouter} from "vue-router";
 
-const instance = getCurrentInstance();
-
-let testNumberInput = ref(0)
+const toast = useToast()
 let userMes = ref({})
 
-const treeData = ref([
-  {
-    title: '',
-    key: '0',
-    children: [
+const router = useRouter()
 
-      ]
+const gotoOrder = () => {
+  if(commodityCheckedMes.length === 0){
+    toast.add({severity: 'error', summary: "请选择要购买的商品！！" , life: 1500})
+    return
   }
-])
-
-const shoppingCartMes = ref({
-  commodities:[{"shop_mes":{},"commodity":{}}]
-})
-
-const commoditiesTmp = ref([])
-
-//获取购物车数据
-const getAllShoppingCartItem = ()=>{
-   getShoppingCartList({current: 1 ,size: 100}).then(({data})=>{
-    if(data.code === 200){
-      shoppingCartMes.value = data.data
-      shoppingCartMes.value.commodities.forEach(async (e)=>{
-        await getShopMes({id:e['commodity']['shop_id']}).then(({data})=>{
-          e['shop_mes'] = data.data
-        })
-        getCommodityTypeChoiceApi({"id":e['id']}).then(({data})=>{
-          let arr = []
-          data.data.forEach((e,index)=>{
-            if(index<3){
-              arr.push({
-                "id":e.id,
-                "typeName":e.type.name,
-                "typeChoiceName":e.typeChoice.name
-              })
-            }
-          })
-          e['type']=arr
-        })
-        dealMediaUrl(e['commodity'])
-
-        let i = 0
-        for (; i < commoditiesTmp.value.length; i++) {   //合并同类店铺
-          if(commoditiesTmp.value[i]['commodity']['0']['shop_id']===e['commodity']['shop_id']){
-            commoditiesTmp.value[i]['commodity'].push(e['commodity'])
-            break
-          }
-        }
-        if(i===commoditiesTmp.value.length) {
-          commoditiesTmp.value.push({
-            ...e,
-            commodity: [e.commodity]
-          })
-        }
-      })
-    }
-  })
-
-  treeData.value.children = commoditiesTmp;
-
-  console.log(treeData)
+  const data = commodityCheckedMes
+  console.log(data)
+  router.push({name: "Order",query: { order: data}})
 }
 
-watch(()=>treeData,(newValue,oldValue)=>{
-  console.log(newValue.value)
-  console.log(66)
-},{deep:true,immediate:true})
+const shoppingCartMes = ref({
+  commodities:[{"shop_mes":{},"commodity":[]}]
+})
 
-onMounted( ()=>{
+const commodityChecked = reactive([{flag:false,children:[{value:1,flag:false}]}])
+const allChecked = ref(false)
+const commodityCheckedMes = reactive([])
+const totalMoney = computed(()=>{
+  let total = 0
+  commodityCheckedMes.forEach((ele)=>{
+    total+=(ele.money*ele.count)
+  })
+  return total
+})
+
+const selectAll = (value)=>{
+  for (let i = 0; i < commodityChecked.length; i++) {
+    if(commodityChecked[i].flag!==value){
+      commodityChecked[i].flag=value
+      selectShop(value,i)
+    }
+  }
+}
+
+const selectShop = (value,index) => {
+  let len = commodityChecked[index].children.length
+  if(!value){
+    allChecked.value = value
+  }else{
+    let shopLen = commodityChecked.length
+    for (let i = 0; i < shopLen; i++) {
+      if(!commodityChecked[i].flag){
+        break
+      }
+      if(i===shopLen-1){
+        allChecked.value = true
+      }
+    }
+  }
+  for (let i = 0; i < len; i++) {
+    commodityChecked[index].children[i].flag = value
+  }
+}
+
+const selectCommodity = (value,shopIndex)=>{
+
+  let len = commodityChecked[shopIndex].children.length
+
+  if(!value){
+    if( commodityChecked[shopIndex].flag !== value){
+      commodityChecked[shopIndex].flag = value
+      allChecked.value=value
+    }
+  }else{
+    let commodityLen = commodityChecked[shopIndex]['children'].length
+    for (let i = 0; i < commodityLen; i++) {
+      if(!commodityChecked[shopIndex]['children'][i].flag){
+        break
+      }
+      if(i===commodityLen-1){
+        commodityChecked[shopIndex].flag = true
+        allChecked.value=value
+      }
+    }
+  }
+
+}
+
+
+//获取勾选的信息
+const getCheckedCommodityMes = ()=>{
+  commodityCheckedMes.length=0
+  commodityChecked.forEach((shop,shopIndex)=>{
+    shop.children.forEach((commodity,commodityIndex)=>{
+      if(commodity.flag){
+        let type = []
+        let choice = []
+        shoppingCartMes.value['commodities'][shopIndex]['commodity'][commodityIndex].type.forEach(e=>{
+          type.push(e['type'].id)
+          choice.push(e['typeChoice'].id)
+        })
+        commodityCheckedMes.push(
+            {
+              shoppingCartCommodity_id:  shoppingCartMes.value['commodities'][shopIndex]['commodity'][commodityIndex]['shoppingCart_id'],
+              commodity_id: shoppingCartMes.value['commodities'][shopIndex]['commodity'][commodityIndex]['id'],
+              money: shoppingCartMes.value['commodities'][shopIndex]['commodity'][commodityIndex]['price'],
+              count: commodity.value,
+              choice,
+              type
+            }
+        )
+      }
+    })
+  })
+}
+
+watch(()=>commodityChecked,()=>getCheckedCommodityMes(),{deep:true})
+
+const removeFromShoppingCart = (id)=>{
+  let data = null
+  if( id instanceof Array){
+    commodityCheckedMes.forEach(e=>{
+      id.push(e['shoppingCartCommodity_id'])
+    })
+    if(id.length===0){
+      toast.add({severity: 'error', summary: "请选择要删除的商品！" , life: 1500})
+      return
+    }
+    data = {ids:id}
+  }else{
+    data = {ids:[id]}
+  }
+  removeFromShoppingCartApi(data).then(({data})=>{
+    console.log(data)
+  })
+}
+
+//获取购物车数据
+const getAllShoppingCartItem =async ()=>{
+   getShoppingCartList({current: 1 ,size: 100}).then(async ({data})=>{
+    if(data.code === 200){
+      let resData = data.data
+
+      console.log(shoppingCartMes.value)
+      if(resData.length===0)return  //如果没数据就直接返回
+
+       await resData.commodities.forEach((e)=>{
+        getShopMes({id:e['commodity']['shop_id']}).then(({data})=>{
+          e['shop_mes'] = data.data
+        })
+        dealMediaUrl(e['commodity'])
+         e['commodity'] = [e['commodity']]
+      })
+      let sc_commodity = []
+
+      commodityChecked.length=0
+      for (let i = 0; i < resData.commodities.length; i++) {    //将同一商铺的商品进行归类
+        await getCommodityTypeChoiceApi({id: resData.commodities[i].id}).then(({data})=>{
+          if(data.code===200){
+            let typeData = data.data
+            resData.commodities[i]['commodity'][0]['type'] = typeData
+          }
+        })
+
+        let j = 0
+        let flag = true
+        for (; j < sc_commodity.length; j++) {
+          if(resData.commodities[i].commodity['shop_id'] === sc_commodity[j].commodity['shop_id']){   //判断是否是同一店铺商品
+            resData.commodities[i].commodity[0]['shoppingCart_id'] = resData.commodities[i].id
+            sc_commodity[j].commodity[sc_commodity[j].commodity.length] = (resData.commodities[i].commodity[0])
+            flag = false
+            commodityChecked[j]['children'].push({value: 1,flag: false})
+          }
+        }
+        if(flag){
+          resData.commodities[i].commodity[0]['shoppingCart_id'] = resData.commodities[i].id
+          sc_commodity[sc_commodity.length]=(resData.commodities[j])    //如果不是同一店铺，就将该商品信息加入sc_commodity
+          commodityChecked.push({children:[{value: 1,flag: false}],flag:false})
+        }
+      }
+      resData.commodities = sc_commodity
+
+      shoppingCartMes.value = resData
+
+
+    }
+  })
+}
+
+
+onMounted(  ()=>{
   //获取用户信息
   let userMesStr = localStorage.getItem("userMes")
   userMes.value = JSON.parse(userMesStr)

@@ -13,7 +13,7 @@ public interface ShoppingCartService {
 
     public Result addCommoditiesToShoppingCart(List<ShoppingCartCommodity> list, List<List<SccChoice>> choiceList);
 
-    public Result removeCommoditiesFromShoppingCart(List<String> ids,String id);
+    public Result removeCommoditiesFromShoppingCart(List<String> ids);
 
     public Result updateShoppingCart(List<ShoppingCartCommodity> list,String id);
 

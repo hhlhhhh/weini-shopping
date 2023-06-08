@@ -20,8 +20,8 @@ public class ShoppingCartController {
     ShoppingCartService shoppingCartService;
 
     @DeleteMapping("/remove")
-    public Result removeCommodities(@RequestParam List<String> ids){
-        return shoppingCartService.removeCommoditiesFromShoppingCart(ids,"");
+    public Result removeCommodities(@RequestParam("ids[]") List<String> ids){
+        return shoppingCartService.removeCommoditiesFromShoppingCart(ids);
     }
 
     @GetMapping("/list")

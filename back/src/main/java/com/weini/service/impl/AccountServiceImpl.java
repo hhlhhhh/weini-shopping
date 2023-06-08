@@ -119,26 +119,33 @@ public class AccountServiceImpl extends ServiceImpl<UserMapper, User> implements
         Optional<User> optional = Optional.of(user);
 
         optional.ifPresentOrElse(u -> {
-            //判空处理
-            optional.map(User::getNickname).filter(RegVerify::verifyNickname)
-                    .orElseThrow(() -> MissedParameterException.Builder("昵称格式错误"));
 
-            optional.map(User::getPhone).filter(RegVerify::verifyPhone)
-                    .orElseThrow(() -> MissedParameterException.Builder("手机号格式错误！"));
+//            try {
+                //判空处理
+                optional.map(User::getNickname).filter(RegVerify::verifyNickname)
+                        .orElseThrow(() -> MissedParameterException.Builder("昵称格式错误"));
 
-            optional.map(User::getEmail).filter(RegVerify::verifyEmail)
-                    .orElseThrow(() -> MissedParameterException.Builder("邮箱格式错误！"));
+                optional.map(User::getPhone).filter(RegVerify::verifyPhone)
+                        .orElseThrow(() -> MissedParameterException.Builder("手机号格式错误！"));
 
-            optional.map(User::getPhone).filter(e->!userMapper.exists(new QueryWrapper<User>().eq("phone", user.getPhone())))
-                    .orElseThrow(() -> ParameterErrorException.Builder("手机号已注册！"));
+                optional.map(User::getEmail).filter(RegVerify::verifyEmail)
+                        .orElseThrow(() -> MissedParameterException.Builder("邮箱格式错误！"));
+
+                optional.map(User::getPhone).filter(e->!userMapper.exists(new QueryWrapper<User>().eq("phone", user.getPhone())))
+                        .orElseThrow(() -> ParameterErrorException.Builder("手机号已注册！"));
+//            }catch (ParameterErrorException )
+
         }, () -> {
             throw MissedParameterException.Builder("参数意外缺失！");
         });
 
+
+
         String localUrl = req.getRequestURL().toString().replace(req.getRequestURI(),"");
         user.setId(RandomId.idConstruct())      //初始化用户信息
+                .setPassword(user.getPhone())
                 .setBalance(0)
-                .setAvatar(localUrl+"/image/default-avatar.png")
+                .setAvatar("default-avatar.png")
                 .setRole("user")
                 .setSex("保密")
                 .setSignature("")
